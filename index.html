@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -445,6 +446,7 @@ header {
         </div>
     </div>
 
+
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     
     <script type="module">
@@ -551,37 +553,42 @@ header {
             });
         }
 
-        async function addParticipant() {
-            const name = document.getElementById('nameInput').value.trim();
+        async function addParticipant()
+          {
+            
+        const name = document.getElementById('nameInput').value.trim();
             const number = document.getElementById('numberInput').value.trim();
             
-            if (!name) {
-                alert('Por favor ingresa un nombre');
-                return;
-            }
+               if (!name) {
+                  alert('Por favor ingresa un nombre');
+                  return;
+                          }
 
-            if (!currentGameId) {
+                if (!currentGameId) {
                 alert('Primero crea un nuevo juego');
                 return;
-            }
+                                     }
 
-            const gameRef = doc(db, 'games', currentGameId);
-            const gameSnapshot = await getDoc(gameRef);
+                   const gameRef = doc(db, 'games', currentGameId);
+                   const gameSnapshot = await getDoc(gameRef);
             
-            if (gameSnapshot.exists() && gameSnapshot.data().status === 'closed') {
+              if (gameSnapshot.exists() && gameSnapshot.data().status === 'closed') {
                 alert('Este juego está cerrado');
                 return;
-            }
+                                                                                  }
 
-            const participantsRef = collection(db, 'games', currentGameId, 'participants');
-            await addDoc(participantsRef, {
+                const participantsRef = collection(db, 'games', currentGameId, 'participants');
+               await addDoc(participantsRef, {
                 name: name,
                 number: number,
                 addedAt: Date.now()
-            });
+                                           });
 
-            document.getElementById('nameInput').value = '';
-            document.getElementById('numberInput').value = '';
+             document.getElementById('nameInput').value = '';
+             document.getElementById('numberInput').value = '';
+
+
+
         }
 
         async function removeParticipant(id) {
@@ -813,19 +820,37 @@ header {
                         <div id="joinMessage" style="margin-top: 20px; text-align: center; font-weight: bold;"></div>
                     </div>
                 </div>
+
+              <br>
+<div class="lists-section" style="margin-top:30px;">
+    <div class="participants-section">
+        <h3>👥 Participantes (<span id="joinParticipantCount">0</span>)</h3>
+        <div id="joinParticipantsList" style="max-height:200px; overflow-y:auto; border:1px solid #ddd; padding:10px; border-radius:8px;"></div>
+    </div>
+
+    <div class="winners-section" style="margin-top:20px;">
+        <h3>🏆 Ganadores (<span id="joinWinnerCount">0</span>)</h3>
+        <div id="joinWinnersList" style="max-height:150px; overflow-y:auto; border:1px solid #ddd; padding:10px; border-radius:8px;"></div>
+    </div>
+</div>
+
+
             `;
 
-            document.getElementById('joinBtn').addEventListener('click', async () => {
+
+            document.getElementById('joinBtn').addEventListener('click', async () => 
+            {
+
                 const name = document.getElementById('joinName').value.trim();
                 const number = document.getElementById('joinNumber').value.trim();
                 const message = document.getElementById('joinMessage');
+
 
                 if (!name) {
                     message.style.color = 'red';
                     message.textContent = '❌ Por favor ingresa tu nombre';
                     return;
-                }
-
+                           }
                 const gameRef = doc(db, 'games', joinGameId);
                 const gameSnapshot = await getDoc(gameRef);
 
@@ -833,28 +858,116 @@ header {
                     message.style.color = 'red';
                     message.textContent = '❌ Este juego no existe';
                     return;
-                }
-
+                                              }
                 if (gameSnapshot.data().status === 'closed') {
                     message.style.color = 'red';
                     message.textContent = '❌ Este juego está cerrado';
                     return;
-                }
-
+                                                              }
                 const participantsRef = collection(db, 'games', joinGameId, 'participants');
                 await addDoc(participantsRef, {
                     name: name,
                     number: number,
                     addedAt: Date.now()
-                });
+                                              });
 
                 message.style.color = 'green';
                 message.textContent = '✅ ¡Te has unido exitosamente!';
                 document.getElementById('joinName').value = '';
                 document.getElementById('joinNumber').value = '';
             });
+        
+        // --- INICIO: listeners para el modo "join" (PEGA ESTO AQUÍ) ---
+/*
+  Coloca este bloque justo después del `document.getElementById('joinBtn').addEventListener(...)`
+  y todavía dentro del `if (joinGameId) { ... }`
+*/
+
+// Referencias a Firestore para el juego que se abrió por enlace
+const joinParticipantsRef = collection(db, 'games', joinGameId, 'participants');
+const joinWinnersRef = collection(db, 'games', joinGameId, 'winners');
+
+// Escuchar participantes en tiempo real y actualizar la vista del join
+onSnapshot(joinParticipantsRef, (snapshot) => {
+    const listDiv = document.getElementById('joinParticipantsList');
+    const countSpan = document.getElementById('joinParticipantCount');
+    const items = [];
+
+    snapshot.forEach(docSnap => {
+        const data = docSnap.data();
+        items.push({
+            id: docSnap.id,
+            name: data.name || '',
+            number: data.number || '',
+            addedAt: data.addedAt || 0
+        });
+    });
+
+    // ordenar opcional: por fecha de añadido (asc)
+    items.sort((a,b) => (a.addedAt || 0) - (b.addedAt || 0));
+
+    countSpan.textContent = items.length;
+
+    if (items.length === 0) {
+        listDiv.innerHTML = '<div style="color:gray; text-align:center; padding:8px;">No hay participantes aún.</div>';
+        return;
+    }
+
+    listDiv.innerHTML = items.map(p => {
+        const num = p.number ? ` <span style="color:#666; font-size:0.9rem;">(${p.number})</span>` : '';
+        return `<div style="padding:6px 4px; border-bottom:1px solid #f0f0f0;">• ${escapeHtml(p.name)}${num}</div>`;
+    }).join('');
+});
+
+// Escuchar ganadores en tiempo real y actualizar la vista del join
+onSnapshot(joinWinnersRef, (snapshot) => {
+    const listDiv = document.getElementById('joinWinnersList');
+    const countSpan = document.getElementById('joinWinnerCount');
+    const items = [];
+
+    snapshot.forEach(docSnap => {
+        const data = docSnap.data();
+        items.push({
+            id: docSnap.id,
+            name: data.name || '',
+            number: data.number || '',
+            wonAt: data.wonAt || 0
+        });
+    });
+
+    // ordenar por fecha ganado (descendente)
+    items.sort((a,b) => (b.wonAt || 0) - (a.wonAt || 0));
+
+    countSpan.textContent = items.length;
+
+    if (items.length === 0) {
+        listDiv.innerHTML = '<div style="color:gray; text-align:center; padding:8px;">Aún no hay ganadores.</div>';
+        return;
+    }
+
+    listDiv.innerHTML = items.map(w => {
+        const time = w.wonAt ? ` <span style="font-size:0.8rem; color:#666;">${new Date(w.wonAt).toLocaleString()}</span>` : '';
+        const num = w.number ? ` <span style="color:#666; font-size:0.9rem;">(${w.number})</span>` : '';
+        return `<div style="padding:6px 4px; border-bottom:1px solid #f9f9f9;">🏆 ${escapeHtml(w.name)}${num}${time}</div>`;
+    }).join('');
+});
+
+// pequeña función helper para evitar inyección accidental al renderizar nombres
+function escapeHtml(str) {
+    return String(str)
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
+}
+// --- FIN: listeners para el modo "join" ---
+
+
         }
     </script>
+
+
+
 </body>
 </html>
-
