@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -5,7 +6,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Ruleta Dinámica Dawin</title>
    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <style>
+  
+ <style>
         * {
             margin: 0;
             padding: 0;
@@ -467,11 +469,13 @@ header {
         </header>
 
 
+
+
         <div class="game-controls">
             <div class="game-info">
                 <div>
                     <span class="game-id">ID del Juego: <strong id="gameIdDisplay">-</strong></span>
-                    <span class="status-badge status-open" id="gameStatus">ABIERTO</span>
+                    <span class="status-badge status-open" id="gameStatus">Apartura un nuevo juego y empieza la diversión </span>
                 </div>
                 <div style="display: flex;gap: 10px;/* flex-wrap: wrap; */">
                     
@@ -489,6 +493,17 @@ header {
 
         <div class="main-content">
             <div class="wheel-section">
+<div style="margin-top: 15px;">
+    <label style="font-weight: bold;">⏳ Duración del giro (seg.)</label>
+    <input 
+        type="number" 
+        id="spinSeconds" 
+        min="1" 
+        value="5" 
+        style="width: 50px; padding: 2px; margin-left: 10px;"
+    >
+</div>
+
                 <h2>Ruleta</h2>
                 <div class="wheel-container">
                     <div class="arrow"></div>
@@ -729,11 +744,6 @@ localStorage.setItem('lastAddedParticipant', newDoc.id);
 
        
 
-
-
-
-
-
         async function removeParticipant(id) {
             if (confirm('¿Eliminar este participante?')) {
                 await deleteDoc(doc(db, 'games', currentGameId, 'participants', id));
@@ -846,6 +856,12 @@ list.innerHTML = participants.map((p) => {
         }
 
         function spinWheel() {
+
+// ❗ Verificar si el juego está abierto
+    if (gameStatus === "open") {
+        alert("Debes cerrar el juego antes de girar la ruleta.");
+        return; // ⛔ No permite girar
+    }
             if (isSpinning || participants.length < 2) return;
             
             isSpinning = true;
@@ -854,9 +870,23 @@ list.innerHTML = participants.map((p) => {
             const spinSound = new Audio('data:audio/wav;base64,UklGRnoGAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YQoGAACBhYqFbF1fdJivrJBhNjVgodDbq2EcBj+a2/LDciUFLIHO8tiJNwgZaLvt559NEAxQp+PwtmMcBjiR1/LMeSwFJHfH8N2QQAoUXrTp66hVFApGn+DyvmwhBTGH0fPTgjMGHm7A7+OZURE=');
             spinSound.play().catch(() => {});
 
-            const totalRotation = 360 * 5 + Math.random() * 360;
-            const duration = 5000;
-            const startTime = Date.now();
+            const totalRotation = 360 * 12 + Math.random() * 360;
+
+ // Leer el tiempo en segundos desde el input
+let spinSeconds = Number(document.getElementById("spinSeconds")?.value);
+
+// Validar si el usuario no puso nada
+if (!spinSeconds || spinSeconds < 1) {
+    spinSeconds = 5; // valor por defecto
+}
+
+// Convertir a milisegundos
+const duration = spinSeconds * 1000;
+
+            
+const startTime = Date.now();
+const segmentAngle = 360 / participants.length;
+
             let currentRotation = 0;
 
             function animate() {
@@ -865,6 +895,7 @@ list.innerHTML = participants.map((p) => {
                 const easeOut = 1 - Math.pow(1 - progress, 3);
                 
                 currentRotation = totalRotation * easeOut;
+
                 
                 ctx.save();
                 ctx.clearRect(0, 0, canvas.width, canvas.height);
@@ -909,6 +940,9 @@ list.innerHTML = participants.map((p) => {
             isSpinning = false;
             document.getElementById('spinBtn').disabled = false;
         }
+
+let lastTick = -1;
+
 
         function createConfetti() {
             for (let i = 0; i < 100; i++) {
