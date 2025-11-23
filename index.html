@@ -582,6 +582,7 @@ z-index: 9999;
             <div class="qr-link" id="qrLink">Genera un nuevo juego para obtener el enlace</div>
         </div>
 
+
         <div class="winners-section">
             <h2>🏆 Ganadores (<span id="winnerCount">0</span>)</h2>
             <div id="winnersList"></div>
@@ -1221,6 +1222,8 @@ let lastTick = -1;
           font-weight:bold; color:#ff4b5c; animation:pulse 1.8s infinite;">
 </p>
 
+
+
 <!-- 🔥 ESTADO DEL JUEGO (USUARIO REMOTO) -->
  <div style="text-align:center; margin-bottom:20px;">
     <p>ID del Juego: <strong>${joinGameId}</strong></p>
@@ -1250,11 +1253,37 @@ let lastTick = -1;
     <div class="winners-section" style="margin-top:20px;">
         <h3>🏆 Ganadores (<span id="joinWinnerCount">0</span>)</h3>
         <div id="joinWinnersList" style="max-height:150px; overflow-y:auto; border:1px solid #ddd; padding:10px; border-radius:8px;"></div>
-    </div>
+
+
+<!-- 🔥 QR Y ENLACE PARA USUARIOS REMOTOS -->
+<div style="text-align:center; margin-top:20px;
+        padding: 20px;
+    border-radius: 15px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);">
+    <div id="joinQR"  style="text-align:center; margin-top:20px;
+        margin-top: 20px;
+    padding: 30px 70px 30px 70px;
+    display: inline-block;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);"></div>
+    <p id="joinLinkContainer" style="margin-top:10px;  
+        text-align:center; margin-top:20px;
+        padding: 20px;
+        border-radius: 15px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);">
+        <a id="joinLink" href="#" target="_blank" style="color:#007bff; font-weight:bold;">
+            Copiar enlace de invitación
+        </a>
+    </p>    
+</div>
+
+</div>
+
 </div>
 
 
             `;
+
+
 
 
       document.getElementById('joinBtn').addEventListener('click', async () => 
@@ -1287,6 +1316,8 @@ let lastTick = -1;
                 const participantsRef = collection(db, 'games', joinGameId, 'participants');
                 
 
+
+
 // Verificar si ya existe el participante con mismo nombre y número 
 const existingSnapshot = await getDocs(participantsRef);
 const alreadyExists = existingSnapshot.docs.some(doc => {
@@ -1316,6 +1347,10 @@ if (alreadyExists) {
                 document.getElementById('joinName').value = '';
                 document.getElementById('joinNumber').value = '';
             });
+
+
+
+
 
 
   // ACTIVAR EL TÍTULO EN EL MODO “JOIN” 
@@ -1382,6 +1417,48 @@ function listenGameStatus(gameId) {
 
 // Activar listener
 listenGameStatus(joinGameId);
+
+
+
+
+
+
+
+
+
+
+// -----------------------------------------------------
+// 🔥 Generar QR en el modo JOIN
+// -----------------------------------------------------
+function generateJoinQR() {
+    const url = `${window.location.origin}${window.location.pathname}?join=${joinGameId}`;
+
+    // QR
+    const div = document.getElementById("joinQR");
+    div.innerHTML = "";
+    new QRCode(div, {
+        text: url,
+        width: 120,
+        height: 120
+    });
+
+    // Enlace
+    const link = document.getElementById("joinLink");
+    link.href = url;
+    link.textContent = "Abrir o compartir enlace de invitación";
+}
+
+// Ejecutarlo
+generateJoinQR();
+
+
+
+
+
+
+
+
+
 
 
 
