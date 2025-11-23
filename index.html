@@ -679,25 +679,52 @@ function listenGameTitle(gameId, displayElementId) {
 
 // ✅ Restaurar juego anterior si existe en localStorage
 const savedGameId = localStorage.getItem('currentGameId');
+
 if (savedGameId) {
     currentGameId = savedGameId;
     console.log("♻️ Juego restaurado automáticamente:", currentGameId);
 
-    // Reactivar listeners
+    // Mostrar ID
+    document.getElementById('gameIdDisplay').textContent = currentGameId;
+
+    // Escuchar estado REAL del juego al cargar
+    const gameRef = doc(db, "games", currentGameId);
+
+    onSnapshot(gameRef, (snap) => {
+        if (!snap.exists()) return;
+
+        const status = snap.data().status || "open";
+        gameStatus = status;
+
+        const statusEl = document.getElementById("gameStatus");
+        const closeBtn = document.getElementById("closeGameBtn");
+
+        if (status === "open") {
+            statusEl.textContent = "ABIERTO";
+            statusEl.className = "status-badge status-open";
+
+            closeBtn.textContent = "🔒 Cerrar Juego";
+            closeBtn.disabled = false;
+        } else {
+            statusEl.textContent = "CERRADO";
+            statusEl.className = "status-badge status-closed";
+
+            closeBtn.textContent = "🔁 Restaurar Juego Actual";
+            closeBtn.disabled = false;
+        }
+    });
+
+ // Reactivar listeners
     listenToParticipants();
     listenToWinners();
+    listenGameTitle(currentGameId, "gameTitleDisplay");
+
 
 listenGameTitle(currentGameId, "gameTitleDisplay");
 loadGameTitle();
 
 
-    // Actualizar interfaz
-    document.getElementById('gameIdDisplay').textContent = currentGameId;
-    document.getElementById('gameStatus').textContent = 'ABIERTO';
-    document.getElementById('gameStatus').className = 'status-badge status-open';
-
-    const closeBtn = document.getElementById('closeGameBtn');
-    if (closeBtn) closeBtn.disabled = false;
+    
 
     // Mostrar QR y enlace
     generateQR();
@@ -740,7 +767,10 @@ if (status === "open") {
     btn.disabled = false;
 }
 
-         
+
+
+
+            
             await setDoc(doc(db, 'games', currentGameId), {
                 status: 'open',
                 createdAt: Date.now()
@@ -859,6 +889,10 @@ localStorage.setItem('lastAddedParticipant', newDoc.id);
   document.getElementById('numberInput').value = '';
 }
 
+       
+
+
+
         async function removeParticipant(id) {
             if (confirm('¿Eliminar este participante?')) {
                 await deleteDoc(doc(db, 'games', currentGameId, 'participants', id));
@@ -970,6 +1004,12 @@ list.innerHTML = participants.map((p) => {
             ctx.fill();
         }
 
+
+
+
+
+
+
 // --- LÓGICA DE GIRO ---
         function spinWheel() {
 
@@ -1078,6 +1118,12 @@ let lastTick = -1;
         }
 
 
+
+
+
+
+
+
   async function closeGame() {
     const gameRef = doc(db, "games", currentGameId);
     const snapshot = await getDoc(gameRef);
@@ -1126,6 +1172,15 @@ let lastTick = -1;
         alert("Juego restaurado y ahora está ABIERTO.");
     }
 }
+
+
+
+
+
+
+
+
+
 
 
         async function removeWinnerFromGame() {
@@ -1460,8 +1515,14 @@ function escapeHtml(str) {
         }
 
 
+
+
+
     </script>
 
- 
+  
+
+
+
 </body>
 </html>
