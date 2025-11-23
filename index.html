@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -5,6 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Ruleta Dinámica Dawin</title>
    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<script src="ej/app.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
   
@@ -497,7 +499,27 @@ z-index: 9999;
        <header>
             <h1>🎡 Juega la Ruleta Dinámica D&R</h1>
             <p class="subtitle">Gira la ruleta y descubre al ganador - Comparte el código QR para participación remota</p>
-        </header>
+        
+<!-- 🔥 TÍTULO EDITABLE DE LA RIFA (ADMIN) -->
+    <div style="margin-top:10px; text-align:center;">
+        <input id="gameTitleInput" 
+               type="text" 
+               placeholder="Escribe el título de la rifa..."
+               style="padding:8px; width:80%; max-width:350px; text-align:center; border-radius:8px;">
+        <p id="gameTitleDisplay" 
+           style="margin-top:10px; font-size:1.3rem; font-weight:bold; color:#ff4b5c; animation:pulse 1.8s infinite;">
+        </p>
+    </div>
+</header>
+
+<!-- 🔥 Animación Pulse -->
+<style>
+@keyframes pulse {
+  0% { opacity: 1; transform: scale(1); }
+  50% { opacity: .65; transform: scale(1.04); }
+  100% { opacity: 1; transform: scale(1); }
+}
+</style>
 
 
 
@@ -580,17 +602,866 @@ z-index: 9999;
   <div id="messageBox" style="margin-top:8px; font-size:0.9rem;"></div>
 </div>
 
-
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
-    
+   
     <script type="module">
-      
-const _0x7412b7=_0xc5e2;(function(_0x2eac2e,_0x5c2f92){const _0x4bd8b2=_0xc5e2,_0x17831e=_0x2eac2e();while(!![]){try{const _0x252705=parseInt(_0x4bd8b2(0xb3))/0x1+parseInt(_0x4bd8b2(0x159))/0x2+-parseInt(_0x4bd8b2(0x11b))/0x3*(parseInt(_0x4bd8b2(0x130))/0x4)+-parseInt(_0x4bd8b2(0x12f))/0x5*(-parseInt(_0x4bd8b2(0x142))/0x6)+-parseInt(_0x4bd8b2(0x137))/0x7+parseInt(_0x4bd8b2(0x145))/0x8*(-parseInt(_0x4bd8b2(0x111))/0x9)+parseInt(_0x4bd8b2(0xf4))/0xa;if(_0x252705===_0x5c2f92)break;else _0x17831e['push'](_0x17831e['shift']());}catch(_0x48604b){_0x17831e['push'](_0x17831e['shift']());}}}(_0x263f,0x529ca));import{initializeApp}from'https://www.gstatic.com/firebasejs/12.5.0/firebase-app.js';import{getFirestore,collection,doc,setDoc,onSnapshot,deleteDoc,addDoc,getDoc,query,getDocs}from'https://www.gstatic.com/firebasejs/12.5.0/firebase-firestore.js';function _0x263f(){const _0x2dd9a9=['animationDelay','#e0e0e0','data','font','classList','qrcode','spinSeconds','map','getItem','toast\x20toast-','replace','#999','newGameBtn','bold\x2014px\x20Arial',')</span>','\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20</span>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<button\x20class=\x22btn\x20btn-danger\x20btn-small\x22\x20onclick=\x22window.removeParticipant(\x27','closeGameBtn','joinNumber','<div\x20class=\x22empty-state\x22>Aún\x20no\x20hay\x20ganadores</div>','toLocaleString','getElementById','joinName','lineWidth','length','lastAddedParticipant','some','winners','<a\x20href=\x22','origin','toLowerCase','addParticipantBtn','catch','stroke','7680680IJQPwh','ruleta-2dc56.firebasestorage.app','rotate','⚠️\x20Cierra\x20el\x20juego\x20antes\x20de\x20girar','❌\x20Este\x20juego\x20no\x20existe','&lt;','596938524799','name','\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<div\x20style=\x22padding:6px\x204px;\x20border-bottom:1px\x20solid\x20#f0f0f0;\x20color:','value','joinWinnerCount','gameIdDisplay','fillText','winnerCount','#FF6B6B','participants','push','\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20</div>\x0a\x20\x20\x20\x20\x20\x20\x20\x20','addEventListener','red','✅\x20¡Te\x20has\x20unido\x20exitosamente!','closePath','spinBtn','open','joinBtn','AudioContext','</div>','error','forEach','2477331VSSgJE','#000','#98D8C8','removeItem','</strong></p>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<div\x20class=\x22input-group\x22\x20style=\x22flex-direction:\x20column;\x22>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<input\x20type=\x22text\x22\x20id=\x22joinName\x22\x20placeholder=\x22Tu\x20nombre\x22\x20style=\x22margin-bottom:\x2010px;\x22\x20/>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<input\x20type=\x22text\x22\x20id=\x22joinNumber\x22\x20placeholder=\x22Tu\x20número\x20(opcional)\x22\x20style=\x22margin-bottom:\x2010px;\x22\x20/>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<button\x20class=\x22btn\x20btn-success\x22\x20id=\x22joinBtn\x22\x20style=\x22width:\x20100%;\x22>✅\x20Unirme\x20al\x20Juego</button>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20</div>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<div\x20id=\x22joinMessage\x22\x20style=\x22margin-top:\x2020px;\x20text-align:\x20center;\x20font-weight:\x20bold;\x22></div>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20</div>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20</div>\x0a\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<br>\x0a<div\x20class=\x22lists-section\x22\x20style=\x22margin-top:30px;\x22>\x0a\x20\x20\x20\x20<div\x20class=\x22participants-section\x22>\x0a\x20\x20\x20\x20\x20\x20\x20\x20<h3>👥\x20Participantes\x20(<span\x20id=\x22joinParticipantCount\x22>0</span>)</h3>\x0a\x20\x20\x20\x20\x20\x20\x20\x20<div\x20id=\x22joinParticipantsList\x22\x20style=\x22max-height:200px;\x20overflow-y:auto;\x20border:1px\x20solid\x20#ddd;\x20padding:10px;\x20border-radius:8px;\x22></div>\x0a\x20\x20\x20\x20</div>\x0a\x0a\x20\x20\x20\x20<div\x20class=\x22winners-section\x22\x20style=\x22margin-top:20px;\x22>\x0a\x20\x20\x20\x20\x20\x20\x20\x20<h3>🏆\x20Ganadores\x20(<span\x20id=\x22joinWinnerCount\x22>0</span>)</h3>\x0a\x20\x20\x20\x20\x20\x20\x20\x20<div\x20id=\x22joinWinnersList\x22\x20style=\x22max-height:150px;\x20overflow-y:auto;\x20border:1px\x20solid\x20#ddd;\x20padding:10px;\x20border-radius:8px;\x22></div>\x0a\x20\x20\x20\x20</div>\x0a</div>\x0a\x0a\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20','join','status','\x27)\x22>Eliminar</button>\x0a\x20\x20\x20\x20\x20\x20\x20\x20</div>\x0a\x20\x20\x20\x20','success','#45B7D1','15rSINlt','wheelCanvas','width','key','left','#FFA07A','toLocaleTimeString','removeWinnerBtn','joinMessage','<div\x20style=\x22color:gray;\x20text-align:center;\x20padding:8px;\x22>Aún\x20no\x20hay\x20ganadores.</div>','ABIERTO','❌\x20Este\x20juego\x20está\x20cerrado','floor','body','backgroundColor','docs','#fff','number','qrLink','disabled','616805bsLFvp','366468nbXHNa','exists','moveTo','textContent','data:audio/wav;base64,UklGRnoGAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YQoGAACBhYqFbF1fdJivrJBhNjVgodDbq2EcBj+a2/LDciUFLIHO8tiJNwgZaLvt559NEAxQp+PwtmMcBjiR1/LMeSwFJHfH8N2QQAoUXrTp66hVFApGn+DyvmwhBTGH0fPTgjMGHm7A7+OZURE=','AIzaSyAxiTkjfh_80fTdXwzLGOl2YMlHsCOsyRM','addedAt','3534776OKoYEr','Enter','joinParticipantCount','clearRect','numberInput','¿Crear\x20nuevo\x20juego?\x20El\x20actual\x20se\x20perderá\x20de\x20la\x20vista.','✅\x20Nuevo\x20juego\x20creado\x20exitosamente','G-Y5DCQVLFML','fill','keypress','closeModalBtn','6moteDZ','&#039;','Este\x20juego\x20está\x20cerrado','8gEPEaQ','add','center','search','¿Cerrar\x20este\x20juego?\x20No\x20se\x20podrán\x20agregar\x20más\x20participantes.','log','innerHTML','<div\x20style=\x22color:gray;\x20text-align:center;\x20padding:8px;\x22>No\x20hay\x20participantes\x20aún.</div>','style','nameInput','active','save','webkitAudioContext','createElement','winnersList','#F7DC6F','\x20<span\x20style=\x22color:#666;\x20font-size:0.9rem;\x22>(','textAlign','joinParticipantsList','location','970402BlapWs','fillStyle','</span>','appendChild','Por\x20favor\x20ingresa\x20un\x20nombre','getContext','currentGameId',';\x22>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20','get','pathname','&quot;','closed','strokeStyle','color','restore','gameStatus','winnerName','participantCount','❌\x20Por\x20favor\x20ingresa\x20tu\x20nombre','winnerModal','200060CPYciL','\x22\x20target=\x22_blank\x22>Copiar\x20enlace\x20de\x20invitación</a>','ruleta-2dc56','\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<div\x20class=\x22container\x22\x20style=\x22max-width:\x20500px;\x20margin-top:\x2050px;\x22>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<div\x20class=\x22game-controls\x22>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<h2\x20style=\x22text-align:\x20center;\x20color:\x20#667eea;\x22>\x20🎡\x20Únete\x20al\x20Juego\x20D&R\x20🎯\x20</h2>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<p\x20style=\x22text-align:\x20center;\x20margin-bottom:\x2020px;\x22>ID:\x20<strong>','height','sort','arc','¿Eliminar\x20este\x20participante?','CERRADO','black','pow','20px\x20Arial','play','click','setItem','beginPath','#333','ruleta-2dc56.firebaseapp.com','&gt;','translate','className','div','random','now','wonAt','remove','show','trim','status-badge\x20status-open','participantsList','games','joinWinnersList'];_0x263f=function(){return _0x2dd9a9;};return _0x263f();}const firebaseConfig={'apiKey':_0x7412b7(0x135),'authDomain':_0x7412b7(0xc4),'projectId':_0x7412b7(0xb5),'storageBucket':_0x7412b7(0xf5),'messagingSenderId':_0x7412b7(0xfa),'appId':'1:596938524799:web:8d3fbd8fc5c3da5828174a','measurementId':_0x7412b7(0x13e)},app=initializeApp(firebaseConfig),db=getFirestore(app);let currentGameId=null,participants=[],winners=[],isSpinning=![],gameStatus=_0x7412b7(0x10b),currentWinner=null;const audioCtx=new(window[(_0x7412b7(0x10d))]||window[(_0x7412b7(0x151))])(),savedGameId=localStorage[_0x7412b7(0xdb)](_0x7412b7(0x15f));if(savedGameId){currentGameId=savedGameId,console[_0x7412b7(0x14a)]('♻️\x20Juego\x20restaurado\x20automáticamente:',currentGameId),listenToParticipants(),listenToWinners(),document[_0x7412b7(0xe7)](_0x7412b7(0xff))['textContent']=currentGameId,document[_0x7412b7(0xe7)]('gameStatus')[_0x7412b7(0x133)]=_0x7412b7(0x125),document['getElementById']('gameStatus')['className']='status-badge\x20status-open';const closeBtn=document[_0x7412b7(0xe7)](_0x7412b7(0xe3));if(closeBtn)closeBtn['disabled']=![];generateQR();}const colors=[_0x7412b7(0x102),'#4ECDC4',_0x7412b7(0x11a),_0x7412b7(0x120),_0x7412b7(0x113),_0x7412b7(0x154),'#BB8FCE','#85C1E2','#F8B739','#52B788'],canvas=document[_0x7412b7(0xe7)](_0x7412b7(0x11c)),ctx=canvas[_0x7412b7(0x15e)]('2d');function generateGameId(){return'GAME_'+Date['now']();}async function initNewGame(){const _0xb74294=_0x7412b7;if(currentGameId&&!confirm(_0xb74294(0x13c)))return;currentGameId=generateGameId(),localStorage['setItem'](_0xb74294(0x15f),currentGameId),participants=[],winners=[],gameStatus=_0xb74294(0x10b),document[_0xb74294(0xe7)](_0xb74294(0xff))[_0xb74294(0x133)]=currentGameId,document[_0xb74294(0xe7)](_0xb74294(0xae))[_0xb74294(0x133)]=_0xb74294(0x125),document['getElementById'](_0xb74294(0xae))['className']=_0xb74294(0xcf),document[_0xb74294(0xe7)](_0xb74294(0xe3))[_0xb74294(0x12e)]=![],await setDoc(doc(db,_0xb74294(0xd1),currentGameId),{'status':_0xb74294(0x10b),'createdAt':Date[_0xb74294(0xca)]()}),generateQR(),updateParticipantsList(),updateWinnersList(),drawWheel(),listenToParticipants(),listenToWinners(),showToast(_0xb74294(0x13d));}function generateQR(){const _0x1ecf69=_0x7412b7,_0x3d1858=document['getElementById'](_0x1ecf69(0xd8));_0x3d1858['innerHTML']='';const _0x20042b=''+window[_0x1ecf69(0x158)][_0x1ecf69(0xef)]+window[_0x1ecf69(0x158)][_0x1ecf69(0x162)]+'?join='+currentGameId;new QRCode(_0x3d1858,{'text':_0x20042b,'width':0x96,'height':0x96}),document['getElementById'](_0x1ecf69(0x12d))[_0x1ecf69(0x14b)]=_0x1ecf69(0xee)+_0x20042b+_0x1ecf69(0xb4);}function listenToParticipants(){const _0x56ff1a=_0x7412b7,_0x3b4619=collection(db,_0x56ff1a(0xd1),currentGameId,_0x56ff1a(0x103));onSnapshot(_0x3b4619,_0x60142=>{const _0x19e67e=_0x56ff1a;participants=[],_0x60142['forEach'](_0x4c0cba=>{const _0x2497aa=_0xc5e2;participants[_0x2497aa(0x104)]({'id':_0x4c0cba['id'],..._0x4c0cba[_0x2497aa(0xd5)]()});});if(participants['length']>0x0){const _0x4d7b62=[...participants][_0x19e67e(0xb8)]((_0x4a6997,_0x1dd4ef)=>(_0x1dd4ef[_0x19e67e(0x136)]||0x0)-(_0x4a6997[_0x19e67e(0x136)]||0x0));localStorage[_0x19e67e(0xc1)](_0x19e67e(0xeb),_0x4d7b62[0x0]['id']);}updateParticipantsList(),drawWheel();});}function listenToWinners(){const _0x55a1e6=_0x7412b7,_0x8dc560=collection(db,_0x55a1e6(0xd1),currentGameId,_0x55a1e6(0xed));onSnapshot(_0x8dc560,_0x48103d=>{const _0x872201=_0x55a1e6;winners=[],_0x48103d[_0x872201(0x110)](_0x471fcb=>{const _0x58c830=_0x872201;winners[_0x58c830(0x104)]({'id':_0x471fcb['id'],..._0x471fcb[_0x58c830(0xd5)]()});}),updateWinnersList();});}async function addParticipant(){const _0x3688af=_0x7412b7,_0x27cc21=document[_0x3688af(0xe7)](_0x3688af(0x14e))[_0x3688af(0xfd)]['trim'](),_0x41c8c0=document[_0x3688af(0xe7)](_0x3688af(0x13b))['value']['trim']();if(!_0x27cc21){showToast(_0x3688af(0x15d));return;}if(!currentGameId){showToast('Primero\x20crea\x20un\x20nuevo\x20juego');return;}const _0x442bc3=doc(db,_0x3688af(0xd1),currentGameId),_0x350af9=await getDoc(_0x442bc3);if(_0x350af9[_0x3688af(0x131)]()&&_0x350af9[_0x3688af(0xd5)]()['status']===_0x3688af(0x164)){showToast(_0x3688af(0x144));return;}const _0x42b241=collection(db,_0x3688af(0xd1),currentGameId,'participants'),_0x164bec=await getDocs(_0x42b241),_0x42eb7d=_0x164bec[_0x3688af(0x12a)]['some'](_0x23d02d=>{const _0x483109=_0x3688af,_0x2c6261=_0x23d02d[_0x483109(0xd5)]();return _0x2c6261[_0x483109(0xfb)][_0x483109(0xf0)]()===_0x27cc21['toLowerCase']()&&_0x2c6261['number']['trim']()===_0x41c8c0[_0x483109(0xce)]();});if(_0x42eb7d){showToast('⚠️\x20Este\x20participante\x20ya\x20existe',_0x3688af(0x10f));return;}const _0x207aac=await addDoc(_0x42b241,{'name':_0x27cc21,'number':_0x41c8c0,'addedAt':Date[_0x3688af(0xca)]()});localStorage['setItem']('lastAddedParticipant',_0x207aac['id']),document[_0x3688af(0xe7)](_0x3688af(0x14e))['value']='',document['getElementById'](_0x3688af(0x13b))[_0x3688af(0xfd)]='';}async function removeParticipant(_0x1374cd){const _0xc07df0=_0x7412b7;confirm(_0xc07df0(0xba))&&await deleteDoc(doc(db,_0xc07df0(0xd1),currentGameId,_0xc07df0(0x103),_0x1374cd));}function updateParticipantsList(){const _0x3c9ecf=_0x7412b7,_0x5f21c6=document[_0x3c9ecf(0xe7)](_0x3c9ecf(0xd0));document[_0x3c9ecf(0xe7)](_0x3c9ecf(0xb0))[_0x3c9ecf(0x133)]=participants['length'],document[_0x3c9ecf(0xe7)](_0x3c9ecf(0x10a))[_0x3c9ecf(0x12e)]=participants[_0x3c9ecf(0xea)]<0x2||isSpinning;if(participants[_0x3c9ecf(0xea)]===0x0){_0x5f21c6['innerHTML']='<div\x20class=\x22empty-state\x22>No\x20hay\x20participantes\x20aún,agrega\x20algunos\x20nombres\x20para\x20empezar\x20tu\x20sorteo</div>';return;}participants['sort']((_0xafca9,_0x3a87a1)=>(_0x3a87a1[_0x3c9ecf(0x136)]||0x0)-(_0xafca9['addedAt']||0x0));const _0x20dffb=localStorage[_0x3c9ecf(0xdb)]('lastAddedParticipant');_0x5f21c6['innerHTML']=participants['map'](_0x4b8d83=>{const _0x174c17=_0x3c9ecf,_0x2b79f9=_0x4b8d83['id']===_0x20dffb;return'\x0a\x20\x20\x20\x20\x20\x20\x20\x20<div\x20class=\x22participant-item\x22>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<span\x20class=\x22participant-name\x22\x20style=\x22color:'+(_0x2b79f9?_0x174c17(0x107):_0x174c17(0xbc))+_0x174c17(0x160)+_0x4b8d83[_0x174c17(0xfb)]+'\x20'+(_0x4b8d83['number']?'('+_0x4b8d83[_0x174c17(0x12c)]+')':'')+_0x174c17(0xe2)+_0x4b8d83['id']+_0x174c17(0x118);})[_0x3c9ecf(0x116)]('');}function updateWinnersList(){const _0xc1fb20=_0x7412b7,_0x20297a=document[_0xc1fb20(0xe7)](_0xc1fb20(0x153));document[_0xc1fb20(0xe7)](_0xc1fb20(0x101))['textContent']=winners[_0xc1fb20(0xea)];if(winners[_0xc1fb20(0xea)]===0x0){_0x20297a['innerHTML']=_0xc1fb20(0xe5);return;}winners['sort']((_0x5e71a1,_0x551a0)=>(_0x5e71a1[_0xc1fb20(0xcb)]||0x0)-(_0x551a0['wonAt']||0x0)),_0x20297a[_0xc1fb20(0x14b)]=winners[_0xc1fb20(0xda)](_0x130790=>'\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<div\x20class=\x22winner-item\x22>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<span>🏆\x20'+_0x130790['name']+'\x20'+(_0x130790['number']?'('+_0x130790['number']+')':'')+'</span>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<span\x20style=\x22font-size:\x200.85rem;\x20color:\x20#666;\x22>'+new Date(_0x130790[_0xc1fb20(0xcb)])[_0xc1fb20(0x121)]()+'</span>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20</div>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20')[_0xc1fb20(0x116)]('');}function _0xc5e2(_0x1a6a7f,_0x66c52e){const _0x263fae=_0x263f();return _0xc5e2=function(_0xc5e2f5,_0x17609d){_0xc5e2f5=_0xc5e2f5-0xad;let _0x5dd380=_0x263fae[_0xc5e2f5];return _0x5dd380;},_0xc5e2(_0x1a6a7f,_0x66c52e);}function drawWheel(){const _0x334fb2=_0x7412b7;if(participants[_0x334fb2(0xea)]===0x0){ctx['clearRect'](0x0,0x0,canvas[_0x334fb2(0x11d)],canvas[_0x334fb2(0xb7)]),ctx[_0x334fb2(0x15a)]=_0x334fb2(0xd4),ctx[_0x334fb2(0xc2)](),ctx['arc'](0xc8,0xc8,0xb4,0x0,0x2*Math['PI']),ctx[_0x334fb2(0x13f)](),ctx[_0x334fb2(0x15a)]=_0x334fb2(0xde),ctx[_0x334fb2(0xd6)]=_0x334fb2(0xbe),ctx[_0x334fb2(0x156)]=_0x334fb2(0x147),ctx[_0x334fb2(0x100)]('Agrega\x20participantes',0xc8,0xc8);return;}const _0x541f87=0xc8,_0x30daa6=0xc8,_0x31d349=0xb4,_0x1fcc81=0x2*Math['PI']/participants[_0x334fb2(0xea)];ctx[_0x334fb2(0x13a)](0x0,0x0,canvas[_0x334fb2(0x11d)],canvas[_0x334fb2(0xb7)]),participants[_0x334fb2(0x110)]((_0x7ec5ef,_0x25da5b)=>{const _0x221a13=_0x334fb2,_0x25850a=_0x25da5b*_0x1fcc81,_0x49163f=_0x25850a+_0x1fcc81;ctx['fillStyle']=colors[_0x25da5b%colors[_0x221a13(0xea)]],ctx[_0x221a13(0xc2)](),ctx[_0x221a13(0x132)](_0x541f87,_0x30daa6),ctx[_0x221a13(0xb9)](_0x541f87,_0x30daa6,_0x31d349,_0x25850a,_0x49163f),ctx[_0x221a13(0x109)](),ctx['fill'](),ctx[_0x221a13(0x165)]=_0x221a13(0x12b),ctx[_0x221a13(0xe9)]=0x3,ctx[_0x221a13(0xf3)](),ctx['save'](),ctx[_0x221a13(0xc6)](_0x541f87,_0x30daa6),ctx[_0x221a13(0xf6)](_0x25850a+_0x1fcc81/0x2),ctx['textAlign']=_0x221a13(0x147),ctx[_0x221a13(0x15a)]=_0x221a13(0x112),ctx[_0x221a13(0xd6)]=_0x221a13(0xe0),ctx['fillText'](_0x7ec5ef['name'],_0x31d349/1.5,0x5),ctx[_0x221a13(0xad)]();}),ctx[_0x334fb2(0x15a)]=_0x334fb2(0xc3),ctx[_0x334fb2(0xc2)](),ctx['arc'](_0x541f87,_0x30daa6,0x14,0x0,0x2*Math['PI']),ctx[_0x334fb2(0x13f)]();}function spinWheel(){const _0x39d631=_0x7412b7;if(gameStatus===_0x39d631(0x10b)){showToast(_0x39d631(0xf7),_0x39d631(0x10f));return;}if(isSpinning||participants[_0x39d631(0xea)]<0x2)return;isSpinning=!![],document['getElementById'](_0x39d631(0x10a))[_0x39d631(0x12e)]=!![];const _0x267168=new Audio(_0x39d631(0x134));_0x267168[_0x39d631(0xbf)]()[_0x39d631(0xf2)](()=>{});const _0x3ed541=0x168*0xc+Math[_0x39d631(0xc9)]()*0x168;let _0x22d795=Number(document[_0x39d631(0xe7)](_0x39d631(0xd9))?.[_0x39d631(0xfd)]);(!_0x22d795||_0x22d795<0x1)&&(_0x22d795=0x5);const _0x48f91a=_0x22d795*0x3e8,_0x2d6f7b=Date['now'](),_0x7144dc=0x168/participants['length'];let _0x84a1c9=0x0;function _0x1e126a(){const _0x3af4ea=_0x39d631,_0x4b5e23=Date[_0x3af4ea(0xca)]()-_0x2d6f7b,_0x2a5dd8=Math['min'](_0x4b5e23/_0x48f91a,0x1),_0xd8cc90=0x1-Math[_0x3af4ea(0xbd)](0x1-_0x2a5dd8,0x3);_0x84a1c9=_0x3ed541*_0xd8cc90,ctx[_0x3af4ea(0x150)](),ctx[_0x3af4ea(0x13a)](0x0,0x0,canvas['width'],canvas[_0x3af4ea(0xb7)]),ctx[_0x3af4ea(0xc6)](0xc8,0xc8),ctx[_0x3af4ea(0xf6)](_0x84a1c9*Math['PI']/0xb4),ctx[_0x3af4ea(0xc6)](-0xc8,-0xc8),drawWheel(),ctx['restore'](),_0x2a5dd8<0x1?requestAnimationFrame(_0x1e126a):announceWinner(_0x84a1c9);}_0x1e126a();}async function announceWinner(_0x421b36){const _0x3b58f4=_0x7412b7,_0x80922b=_0x421b36%0x168,_0x5eb6b7=0x168/participants[_0x3b58f4(0xea)],_0x2ad27e=Math['floor']((0x168-_0x80922b)/_0x5eb6b7)%participants[_0x3b58f4(0xea)];currentWinner=participants[_0x2ad27e],document[_0x3b58f4(0xe7)](_0x3b58f4(0xaf))[_0x3b58f4(0x133)]=currentWinner['name'],document[_0x3b58f4(0xe7)](_0x3b58f4(0xb2))['classList'][_0x3b58f4(0x146)](_0x3b58f4(0x14f)),createConfetti();const _0x35eb92=new Audio(_0x3b58f4(0x134));_0x35eb92['play']()['catch'](()=>{});const _0x1fef3b=collection(db,_0x3b58f4(0xd1),currentGameId,'winners');await addDoc(_0x1fef3b,{'name':currentWinner[_0x3b58f4(0xfb)],'number':currentWinner['number']||'','wonAt':Date[_0x3b58f4(0xca)]()}),isSpinning=![],document[_0x3b58f4(0xe7)](_0x3b58f4(0x10a))[_0x3b58f4(0x12e)]=![];}let lastTick=-0x1;function createConfetti(){for(let _0x1b2c40=0x0;_0x1b2c40<0x64;_0x1b2c40++){setTimeout(()=>{const _0x5757f8=_0xc5e2,_0x3d82a3=document[_0x5757f8(0x152)]('div');_0x3d82a3[_0x5757f8(0xc7)]='confetti',_0x3d82a3[_0x5757f8(0x14d)][_0x5757f8(0x11f)]=Math[_0x5757f8(0xc9)]()*window['innerWidth']+'px',_0x3d82a3[_0x5757f8(0x14d)][_0x5757f8(0x129)]=colors[Math[_0x5757f8(0x127)](Math['random']()*colors['length'])],_0x3d82a3[_0x5757f8(0x14d)][_0x5757f8(0xd3)]=Math[_0x5757f8(0xc9)]()*0.5+'s',document[_0x5757f8(0x128)][_0x5757f8(0x15c)](_0x3d82a3),setTimeout(()=>_0x3d82a3['remove'](),0xbb8);},_0x1b2c40*0x1e);}}async function closeGame(){const _0x1dfc0d=_0x7412b7;confirm(_0x1dfc0d(0x149))&&(await setDoc(doc(db,_0x1dfc0d(0xd1),currentGameId),{'status':_0x1dfc0d(0x164),'closedAt':Date[_0x1dfc0d(0xca)]()},{'merge':!![]}),gameStatus='closed',document[_0x1dfc0d(0xe7)](_0x1dfc0d(0xae))[_0x1dfc0d(0x133)]=_0x1dfc0d(0xbb),document[_0x1dfc0d(0xe7)](_0x1dfc0d(0xae))[_0x1dfc0d(0xc7)]='status-badge\x20status-closed',document['getElementById'](_0x1dfc0d(0xe3))[_0x1dfc0d(0x12e)]=!![],localStorage[_0x1dfc0d(0x114)](_0x1dfc0d(0x15f)),alert('Juego\x20cerrado.\x20Ya\x20no\x20se\x20aceptan\x20más\x20participantes.'));}async function removeWinnerFromGame(){const _0x2ca864=_0x7412b7;currentWinner&&(await deleteDoc(doc(db,'games',currentGameId,'participants',currentWinner['id'])),document[_0x2ca864(0xe7)](_0x2ca864(0xb2))[_0x2ca864(0xd7)][_0x2ca864(0xcc)](_0x2ca864(0x14f)),currentWinner=null);}document[_0x7412b7(0xe7)](_0x7412b7(0xdf))[_0x7412b7(0x106)](_0x7412b7(0xc0),initNewGame),document[_0x7412b7(0xe7)](_0x7412b7(0xf1))[_0x7412b7(0x106)](_0x7412b7(0xc0),addParticipant),document[_0x7412b7(0xe7)](_0x7412b7(0x10a))[_0x7412b7(0x106)]('click',spinWheel),document['getElementById'](_0x7412b7(0xe3))[_0x7412b7(0x106)](_0x7412b7(0xc0),closeGame),document[_0x7412b7(0xe7)](_0x7412b7(0x141))[_0x7412b7(0x106)](_0x7412b7(0xc0),()=>{const _0x4aeb97=_0x7412b7;document[_0x4aeb97(0xe7)](_0x4aeb97(0xb2))[_0x4aeb97(0xd7)]['remove']('active');}),document[_0x7412b7(0xe7)](_0x7412b7(0x122))[_0x7412b7(0x106)]('click',removeWinnerFromGame),document[_0x7412b7(0xe7)]('nameInput')[_0x7412b7(0x106)](_0x7412b7(0x140),_0x2c017b=>{const _0xcd75b4=_0x7412b7;if(_0x2c017b[_0xcd75b4(0x11e)]===_0xcd75b4(0x138))addParticipant();}),window['removeParticipant']=removeParticipant;const urlParams=new URLSearchParams(window['location'][_0x7412b7(0x148)]),joinGameId=urlParams[_0x7412b7(0x161)]('join');if(joinGameId){document[_0x7412b7(0x128)][_0x7412b7(0x14b)]=_0x7412b7(0xb6)+joinGameId+_0x7412b7(0x115),document[_0x7412b7(0xe7)](_0x7412b7(0x10c))['addEventListener']('click',async()=>{const _0x367c40=_0x7412b7,_0x49e3f6=document[_0x367c40(0xe7)](_0x367c40(0xe8))[_0x367c40(0xfd)][_0x367c40(0xce)](),_0x4c9e76=document[_0x367c40(0xe7)](_0x367c40(0xe4))[_0x367c40(0xfd)][_0x367c40(0xce)](),_0x16c047=document['getElementById'](_0x367c40(0x123));_0x16c047[_0x367c40(0x133)]='';if(!_0x49e3f6){_0x16c047[_0x367c40(0x14d)][_0x367c40(0x166)]=_0x367c40(0x107),_0x16c047['textContent']=_0x367c40(0xb1);return;}const _0x5dd856=doc(db,'games',joinGameId),_0x10852b=await getDoc(_0x5dd856);if(!_0x10852b[_0x367c40(0x131)]()){_0x16c047[_0x367c40(0x14d)][_0x367c40(0x166)]='red',_0x16c047[_0x367c40(0x133)]=_0x367c40(0xf8);return;}if(_0x10852b[_0x367c40(0xd5)]()[_0x367c40(0x117)]==='closed'){_0x16c047[_0x367c40(0x14d)][_0x367c40(0x166)]='red',_0x16c047[_0x367c40(0x133)]=_0x367c40(0x126);return;}const _0x52a710=collection(db,_0x367c40(0xd1),joinGameId,_0x367c40(0x103)),_0x177ca9=await getDocs(_0x52a710),_0x35a21c=_0x177ca9['docs'][_0x367c40(0xec)](_0x144591=>{const _0xf59e7a=_0x367c40,_0x48f6e8=_0x144591['data']();return _0x48f6e8[_0xf59e7a(0xfb)]['toLowerCase']()===_0x49e3f6['toLowerCase']()&&_0x48f6e8[_0xf59e7a(0x12c)]['trim']()===_0x4c9e76[_0xf59e7a(0xce)]();});if(_0x35a21c){_0x16c047[_0x367c40(0x14d)][_0x367c40(0x166)]='red',_0x16c047[_0x367c40(0x133)]='⚠️\x20Este\x20nombre\x20y\x20número\x20ya\x20están\x20registrados.';return;}await addDoc(_0x52a710,{'name':_0x49e3f6,'number':_0x4c9e76,'addedAt':Date['now']()}),_0x16c047[_0x367c40(0x14d)][_0x367c40(0x166)]='green',_0x16c047[_0x367c40(0x133)]=_0x367c40(0x108),document[_0x367c40(0xe7)](_0x367c40(0xe8))[_0x367c40(0xfd)]='',document['getElementById'](_0x367c40(0xe4))[_0x367c40(0xfd)]='';});const joinParticipantsRef=collection(db,'games',joinGameId,_0x7412b7(0x103)),joinWinnersRef=collection(db,_0x7412b7(0xd1),joinGameId,_0x7412b7(0xed));onSnapshot(joinParticipantsRef,_0x988f61=>{const _0x3490a7=_0x7412b7,_0xf94f7f=document['getElementById'](_0x3490a7(0x157)),_0x2e3049=document[_0x3490a7(0xe7)](_0x3490a7(0x139)),_0x227a27=[];_0x988f61[_0x3490a7(0x110)](_0x1f1299=>{const _0x26321c=_0x3490a7,_0x3420e4=_0x1f1299[_0x26321c(0xd5)]();_0x227a27['push']({'id':_0x1f1299['id'],'name':_0x3420e4[_0x26321c(0xfb)]||'','number':_0x3420e4[_0x26321c(0x12c)]||'','addedAt':_0x3420e4[_0x26321c(0x136)]||0x0});}),_0x227a27[_0x3490a7(0xb8)]((_0x48514e,_0x8b32ef)=>(_0x8b32ef[_0x3490a7(0x136)]||0x0)-(_0x48514e[_0x3490a7(0x136)]||0x0)),_0x2e3049['textContent']=_0x227a27[_0x3490a7(0xea)];if(_0x227a27['length']===0x0){_0xf94f7f['innerHTML']=_0x3490a7(0x14c);return;}let _0x268f00=_0x227a27[0x0]['id'];_0xf94f7f[_0x3490a7(0x14b)]=_0x227a27[_0x3490a7(0xda)](_0x325b98=>{const _0x2c861d=_0x3490a7,_0x539496=_0x325b98['id']===_0x268f00,_0x131e50=_0x539496?_0x2c861d(0x107):_0x2c861d(0xbc),_0x4f3f4e=_0x325b98[_0x2c861d(0x12c)]?_0x2c861d(0x155)+_0x325b98['number']+_0x2c861d(0xe1):'';return _0x2c861d(0xfc)+_0x131e50+'\x22>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20•\x20'+escapeHtml(_0x325b98['name'])+_0x4f3f4e+_0x2c861d(0x105);})[_0x3490a7(0x116)]('');}),onSnapshot(joinWinnersRef,_0x362069=>{const _0x2e3e2d=_0x7412b7,_0x205bb3=document[_0x2e3e2d(0xe7)](_0x2e3e2d(0xd2)),_0x3e6f80=document[_0x2e3e2d(0xe7)](_0x2e3e2d(0xfe)),_0x314d58=[];_0x362069['forEach'](_0xab7dbc=>{const _0x2c8b9b=_0x2e3e2d,_0x4b4ad5=_0xab7dbc['data']();_0x314d58[_0x2c8b9b(0x104)]({'id':_0xab7dbc['id'],'name':_0x4b4ad5['name']||'','number':_0x4b4ad5['number']||'','wonAt':_0x4b4ad5['wonAt']||0x0});}),_0x314d58['sort']((_0x194cde,_0x27dbaf)=>(_0x194cde[_0x2e3e2d(0xcb)]||0x0)-(_0x27dbaf[_0x2e3e2d(0xcb)]||0x0)),_0x3e6f80['textContent']=_0x314d58[_0x2e3e2d(0xea)];if(_0x314d58[_0x2e3e2d(0xea)]===0x0){_0x205bb3[_0x2e3e2d(0x14b)]=_0x2e3e2d(0x124);return;}_0x205bb3[_0x2e3e2d(0x14b)]=_0x314d58['map'](_0x478eed=>{const _0xf98d2b=_0x2e3e2d,_0x48c7cd=_0x478eed[_0xf98d2b(0xcb)]?'\x20<span\x20style=\x22font-size:0.8rem;\x20color:#666;\x22>'+new Date(_0x478eed[_0xf98d2b(0xcb)])[_0xf98d2b(0xe6)]()+_0xf98d2b(0x15b):'',_0x18af73=_0x478eed[_0xf98d2b(0x12c)]?_0xf98d2b(0x155)+_0x478eed[_0xf98d2b(0x12c)]+_0xf98d2b(0xe1):'';return'<div\x20style=\x22padding:6px\x204px;\x20border-bottom:1px\x20solid\x20#f9f9f9;\x22>🏆\x20'+escapeHtml(_0x478eed[_0xf98d2b(0xfb)])+_0x18af73+_0x48c7cd+_0xf98d2b(0x10e);})[_0x2e3e2d(0x116)]('');});function escapeHtml(_0x11386e){const _0x3d3b16=_0x7412b7;return String(_0x11386e)[_0x3d3b16(0xdd)](/&/g,'&amp;')[_0x3d3b16(0xdd)](/</g,_0x3d3b16(0xf9))['replace'](/>/g,_0x3d3b16(0xc5))[_0x3d3b16(0xdd)](/"/g,_0x3d3b16(0x163))['replace'](/'/g,_0x3d3b16(0x143));}}function showToast(_0x42f6fb,_0x179d7b=_0x7412b7(0x119)){const _0x5ca125=_0x7412b7,_0x1c7555=document[_0x5ca125(0xe7)]('toast-container'),_0x16fe8a=document['createElement'](_0x5ca125(0xc8));_0x16fe8a[_0x5ca125(0xc7)]=_0x5ca125(0xdc)+_0x179d7b,_0x16fe8a['textContent']=_0x42f6fb,_0x1c7555[_0x5ca125(0x15c)](_0x16fe8a),void _0x16fe8a['offsetWidth'],_0x16fe8a[_0x5ca125(0xd7)][_0x5ca125(0x146)]('show'),setTimeout(()=>{const _0x55a710=_0x5ca125;_0x16fe8a['classList'][_0x55a710(0xcc)](_0x55a710(0xcd)),setTimeout(()=>_0x16fe8a[_0x55a710(0xcc)](),0x12c);},0xbb8);}
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/12.5.0/firebase-app.js";
+        import { getFirestore, collection, doc, setDoc, onSnapshot, deleteDoc, addDoc, getDoc, query, getDocs } from "https://www.gstatic.com/firebasejs/12.5.0/firebase-firestore.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyAxiTkjfh_80fTdXwzLGOl2YMlHsCOsyRM",
+            authDomain: "ruleta-2dc56.firebaseapp.com",
+            projectId: "ruleta-2dc56",
+            storageBucket: "ruleta-2dc56.firebasestorage.app",
+            messagingSenderId: "596938524799",
+            appId: "1:596938524799:web:8d3fbd8fc5c3da5828174a",
+            measurementId: "G-Y5DCQVLFML"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+
+        let currentGameId = null;
+
+
+// ---------------------------------------
+// 🔥 SINCRONIZACIÓN DEL TÍTULO EN TIEMPO REAL
+// ---------------------------------------
+
+async function saveGameTitle(title) {
+    if (!currentGameId) return;
+
+    const gameRef = doc(db, "games", currentGameId);
+    await setDoc(gameRef, { title: title }, { merge: true });
+
+    localStorage.setItem("gameTitle", title);
+}
+
+function loadGameTitle() {
+    const saved = localStorage.getItem("gameTitle");
+    if (saved) {
+        document.getElementById("gameTitleInput").value = saved;
+        document.getElementById("gameTitleDisplay").textContent = saved;
+    }
+}
+
+// 🟦 Listener del input
+setTimeout(() => {
+    const input = document.getElementById("gameTitleInput");
+    if (input) {
+        input.addEventListener("input", (e) => {
+            const title = e.target.value.trim();
+            document.getElementById("gameTitleDisplay").textContent = title;
+            saveGameTitle(title);
+        });
+    }
+}, 500);
+
+// 🟩 Escucha remota en Firebase para ambos lados
+function listenGameTitle(gameId, displayElementId) {
+    const gameRef = doc(db, "games", gameId);
+    onSnapshot(gameRef, (snap) => {
+        if (!snap.exists()) return;
+        const title = snap.data().title || "";
+        const el = document.getElementById(displayElementId);
+        if (el) el.textContent = title;
+    });
+}
+
+
+        let participants = [];
+        let winners = [];
+        let isSpinning = false;
+        let gameStatus = 'open';
+        let currentWinner = null;
+
+ // Contexto de Audio para efectos precisos
+        const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+
+// ✅ Restaurar juego anterior si existe en localStorage
+const savedGameId = localStorage.getItem('currentGameId');
+if (savedGameId) {
+    currentGameId = savedGameId;
+    console.log("♻️ Juego restaurado automáticamente:", currentGameId);
+
+    // Reactivar listeners
+    listenToParticipants();
+    listenToWinners();
+
+listenGameTitle(currentGameId, "gameTitleDisplay");
+loadGameTitle();
+
+
+    // Actualizar interfaz
+    document.getElementById('gameIdDisplay').textContent = currentGameId;
+    document.getElementById('gameStatus').textContent = 'ABIERTO';
+    document.getElementById('gameStatus').className = 'status-badge status-open';
+
+    const closeBtn = document.getElementById('closeGameBtn');
+    if (closeBtn) closeBtn.disabled = false;
+
+    // Mostrar QR y enlace
+    generateQR();
+}
+
+
+
+        const colors = ['#FF6B6B', '#4ECDC4', '#45B7D1', '#FFA07A', '#98D8C8', '#F7DC6F', '#BB8FCE', '#85C1E2', '#F8B739', '#52B788'];
+
+        const canvas = document.getElementById('wheelCanvas');
+        const ctx = canvas.getContext('2d');
+
+
+        function generateGameId() {
+            return 'GAME_' + Date.now();
+        }
+
+        async function initNewGame() {
+ if(currentGameId && !confirm("¿Crear nuevo juego? El actual se perderá de la vista.")) return;
+            currentGameId = generateGameId();
+localStorage.setItem('currentGameId', currentGameId);
+            participants = [];
+            winners = [];
+            gameStatus = 'open';
+            
+            document.getElementById('gameIdDisplay').textContent = currentGameId;
+            document.getElementById('gameStatus').textContent = 'ABIERTO';
+            document.getElementById('gameStatus').className = 'status-badge status-open';
+            document.getElementById('closeGameBtn').disabled = false;
+
+
+
+const btn = document.getElementById("closeGameBtn");
+
+if (status === "open") {
+    btn.textContent = "🔒 Cerrar Juego";
+    btn.disabled = false;
+} else {
+    btn.textContent = "🔁 Restaurar Juego Actual";
+    btn.disabled = false;
+}
+
+         
+            await setDoc(doc(db, 'games', currentGameId), {
+                status: 'open',
+                createdAt: Date.now()
+            });
+
+            generateQR();
+listenGameTitle(currentGameId, "gameTitleDisplay");
+
+            updateParticipantsList();
+            updateWinnersList();
+            drawWheel();
+
+            
+            listenToParticipants();
+            listenToWinners();
+showToast('✅ Nuevo juego creado exitosamente');
+        }
+
+      function generateQR() {
+            const qrDiv = document.getElementById('qrcode');
+            qrDiv.innerHTML = '';
+            const url = `${window.location.origin}${window.location.pathname}?join=${currentGameId}`;
+            new QRCode(qrDiv, { text: url, width: 150, height: 150 });
+            document.getElementById('qrLink').innerHTML = `<a href="${url}" target="_blank">Copiar enlace de invitación</a>`;
+        }
+
+     function listenToParticipants() {
+    const participantsRef = collection(db, 'games', currentGameId, 'participants');
+    onSnapshot(participantsRef, (snapshot) => {
+        participants = [];
+        snapshot.forEach((doc) => {
+            participants.push({
+                id: doc.id,
+                ...doc.data()
+            });
+        });
+
+        // 🔥 Marcar en tiempo real el último agregado
+        if (participants.length > 0) {
+            // Ordenamos temporalmente para detectar el último agregado
+            const ordered = [...participants].sort((a, b) => (b.addedAt || 0) - (a.addedAt || 0));
+            localStorage.setItem('lastAddedParticipant', ordered[0].id);
+        }
+
+        updateParticipantsList();
+        drawWheel();
+    });
+}
+
+
+
+        function listenToWinners() {
+            const winnersRef = collection(db, 'games', currentGameId, 'winners');
+            onSnapshot(winnersRef, (snapshot) => {
+                winners = [];
+                snapshot.forEach((doc) => {
+                    winners.push({
+                        id: doc.id,
+                        ...doc.data()
+                    });
+                });
+                updateWinnersList();
+            });
+        }
+
+
+
+async function addParticipant() {
+  const name = document.getElementById('nameInput').value.trim();
+  const number = document.getElementById('numberInput').value.trim();
+
+  if (!name) {
+    showToast("Por favor ingresa un nombre");
+    return;
+  }
+
+  if (!currentGameId) {
+    showToast("Primero crea un nuevo juego");
+    return;
+  }
+
+  const gameRef = doc(db, 'games', currentGameId);
+  const gameSnapshot = await getDoc(gameRef);
+
+  if (gameSnapshot.exists() && gameSnapshot.data().status === 'closed') {
+    showToast("Este juego está cerrado");
+    return;
+  }
+
+  // 🔍 Verificar duplicado antes de agregar
+  const participantsRef = collection(db, 'games', currentGameId, 'participants');
+  const querySnapshot = await getDocs(participantsRef);
+  const exists = querySnapshot.docs.some(doc => {
+    const data = doc.data();
+    return (
+      data.name.toLowerCase() === name.toLowerCase() &&
+      data.number.trim() === number.trim()
+    );
+  });
+
+  if (exists) {
+    showToast('⚠️ Este participante ya existe', 'error');
+    return;
+  }
+
+ const newDoc = await addDoc(participantsRef, {
+    name: name,
+    number: number,
+    addedAt: Date.now(),
+});
+
+// 🔴 Guardar el ID del último agregado
+localStorage.setItem('lastAddedParticipant', newDoc.id);
+
+  document.getElementById('nameInput').value = '';
+  document.getElementById('numberInput').value = '';
+}
+
+        async function removeParticipant(id) {
+            if (confirm('¿Eliminar este participante?')) {
+                await deleteDoc(doc(db, 'games', currentGameId, 'participants', id));
+            }
+        }
+
+        function updateParticipantsList() {
+            const list = document.getElementById('participantsList');
+            document.getElementById('participantCount').textContent = participants.length;
+            document.getElementById('spinBtn').disabled = participants.length < 2 || isSpinning;
+            
+            if (participants.length === 0) {
+                list.innerHTML = '<div class="empty-state">No hay participantes aún,agrega algunos nombres para empezar tu sorteo</div>';
+                return;
+            }
+            
+    // 🔥 Ordenar por fecha agregado DESC
+    participants.sort((a, b) => (b.addedAt || 0) - (a.addedAt || 0));
+
+            const lastId = localStorage.getItem('lastAddedParticipant');
+
+list.innerHTML = participants.map((p) => {
+    const isLast = p.id === lastId;
+    return `
+        <div class="participant-item">
+            <span class="participant-name" style="color:${isLast ? 'red' : 'black'};">
+                ${p.name} ${p.number ? `(${p.number})` : ''}
+            </span>
+            <button class="btn btn-danger btn-small" onclick="window.removeParticipant('${p.id}')">Eliminar</button>
+        </div>
+    `;
+}).join('');
+
+        }
+
+
+
+        function updateWinnersList() {
+            const list = document.getElementById('winnersList');
+            document.getElementById('winnerCount').textContent = winners.length;
+            
+            if (winners.length === 0) {
+                list.innerHTML = '<div class="empty-state">Aún no hay ganadores</div>';
+                return;
+            }
+            
+  // 🔹 Ordenar por hora ganada (ascendente: del primero al último)
+    winners.sort((a, b) => (a.wonAt || 0) - (b.wonAt || 0));
+
+    // 🔹 Mostrar los ganadores ordenados
+
+            list.innerHTML = winners.map(w => `
+                <div class="winner-item">
+                    <span>🏆 ${w.name} ${w.number ? `(${w.number})` : ''}</span>
+                    <span style="font-size: 0.85rem; color: #666;">${new Date(w.wonAt).toLocaleTimeString()}</span>
+                </div>
+            `).join('');
+        }
+
+        function drawWheel() {
+            if (participants.length === 0) {
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                ctx.fillStyle = '#e0e0e0';
+                ctx.beginPath();
+                ctx.arc(200, 200, 180, 0, 2 * Math.PI);
+                ctx.fill();
+                ctx.fillStyle = '#999';
+                ctx.font = '20px Arial';
+                ctx.textAlign = 'center';
+                ctx.fillText('Agrega participantes', 200, 200);
+                return;
+            }
+
+            const centerX = 200;
+            const centerY = 200;
+            const radius = 180;
+            const anglePerSegment = (2 * Math.PI) / participants.length;
+
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            participants.forEach((p, i) => {
+                const startAngle = i * anglePerSegment;
+                const endAngle = startAngle + anglePerSegment;
+                
+                ctx.fillStyle = colors[i % colors.length];
+                ctx.beginPath();
+                ctx.moveTo(centerX, centerY);
+                ctx.arc(centerX, centerY, radius, startAngle, endAngle);
+                ctx.closePath();
+                ctx.fill();
+                
+                ctx.strokeStyle = '#fff';
+                ctx.lineWidth = 3;
+                ctx.stroke();
+
+                ctx.save();
+                ctx.translate(centerX, centerY);
+                ctx.rotate(startAngle + anglePerSegment / 2);
+                ctx.textAlign = 'center';
+                ctx.fillStyle = '#000';
+                ctx.font = 'bold 14px Arial';
+                ctx.fillText(p.name, radius / 1.5, 5);
+                ctx.restore();
+            });
+
+            ctx.fillStyle = '#333';
+            ctx.beginPath();
+            ctx.arc(centerX, centerY, 20, 0, 2 * Math.PI);
+            ctx.fill();
+        }
+
+// --- LÓGICA DE GIRO ---
+        function spinWheel() {
+
+// ❗ Verificar si el juego está abierto
+    if (gameStatus === "open") {
+        showToast("⚠️ Cierra el juego antes de girar", 'error');
+        return; // ⛔ No permite girar
+    }
+
+            if (isSpinning || participants.length < 2) return;
+            
+            isSpinning = true;
+            document.getElementById('spinBtn').disabled = true;
+            
+            const spinSound = new Audio('data:audio/wav;base64,UklGRnoGAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YQoGAACBhYqFbF1fdJivrJBhNjVgodDbq2EcBj+a2/LDciUFLIHO8tiJNwgZaLvt559NEAxQp+PwtmMcBjiR1/LMeSwFJHfH8N2QQAoUXrTp66hVFApGn+DyvmwhBTGH0fPTgjMGHm7A7+OZURE=');
+            spinSound.play().catch(() => {});
+
+            const totalRotation = 360 * 12 + Math.random() * 360;
+
+ // Leer el tiempo en segundos desde el input
+let spinSeconds = Number(document.getElementById("spinSeconds")?.value);
+
+// Validar si el usuario no puso nada
+if (!spinSeconds || spinSeconds < 1) {
+    spinSeconds = 5; // valor por defecto
+}
+
+// Convertir a milisegundos
+const duration = spinSeconds * 1000;
+
+            
+const startTime = Date.now();
+const segmentAngle = 360 / participants.length;
+
+            let currentRotation = 0;
+
+
+            function animate() {
+                const elapsed = Date.now() - startTime;
+                const progress = Math.min(elapsed / duration, 1);
+                const easeOut = 1 - Math.pow(1 - progress, 3);
+                
+                currentRotation = totalRotation * easeOut;
+
+                
+                ctx.save();
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                ctx.translate(200, 200);
+                ctx.rotate((currentRotation * Math.PI) / 180);
+                ctx.translate(-200, -200);
+                drawWheel();
+                ctx.restore();
+
+                if (progress < 1) {
+                    requestAnimationFrame(animate);
+                } else {
+                    announceWinner(currentRotation);
+                }
+            }
+
+            animate();
+        }
+
+        async function announceWinner(rotation) {
+            const normalizedRotation = rotation % 360;
+            const anglePerSegment = 360 / participants.length;
+            const winnerIndex = Math.floor((360 - normalizedRotation) / anglePerSegment) % participants.length;
+            
+            currentWinner = participants[winnerIndex];
+            
+            document.getElementById('winnerName').textContent = currentWinner.name;
+            document.getElementById('winnerModal').classList.add('active');
+            
+            createConfetti();
+            
+            const winSound = new Audio('data:audio/wav;base64,UklGRnoGAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YQoGAACBhYqFbF1fdJivrJBhNjVgodDbq2EcBj+a2/LDciUFLIHO8tiJNwgZaLvt559NEAxQp+PwtmMcBjiR1/LMeSwFJHfH8N2QQAoUXrTp66hVFApGn+DyvmwhBTGH0fPTgjMGHm7A7+OZURE=');
+            winSound.play().catch(() => {});
+
+            const winnersRef = collection(db, 'games', currentGameId, 'winners');
+            await addDoc(winnersRef, {
+                name: currentWinner.name,
+                number: currentWinner.number || '',
+                wonAt: Date.now()
+            });
+
+            isSpinning = false;
+            document.getElementById('spinBtn').disabled = false;
+        }
+
+let lastTick = -1;
+
+
+        function createConfetti() {
+            for (let i = 0; i < 100; i++) {
+                setTimeout(() => {
+                    const confetti = document.createElement('div');
+                    confetti.className = 'confetti';
+                    confetti.style.left = Math.random() * window.innerWidth + 'px';
+                    confetti.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+                    confetti.style.animationDelay = Math.random() * 0.5 + 's';
+                    document.body.appendChild(confetti);
+                    
+                    setTimeout(() => confetti.remove(), 3000);
+                }, i * 30);
+            }
+        }
+
+
+  async function closeGame() {
+    const gameRef = doc(db, "games", currentGameId);
+    const snapshot = await getDoc(gameRef);
+
+    if (!snapshot.exists()) return;
+
+    const currentStatus = snapshot.data().status || "open";
+
+    // 🟥 SI EL JUEGO ESTÁ ABIERTO → CERRARLO
+    if (currentStatus === "open") {
+        if (!confirm("¿Cerrar este juego? No se podrán agregar más participantes.")) return;
+
+        await setDoc(gameRef, { status: "closed", closedAt: Date.now() }, { merge: true });
+
+        gameStatus = "closed";
+
+        // actualizar badge admin
+        document.getElementById("gameStatus").textContent = "CERRADO";
+        document.getElementById("gameStatus").className = "status-badge status-closed";
+
+        // cambiar texto del botón
+        const btn = document.getElementById("closeGameBtn");
+        btn.textContent = "🔁 Restaurar Juego Actual";
+        btn.disabled = false; // permitir restaurar
+
+        alert("Juego cerrado.");
+    }
+
+    // 🟩 SI EL JUEGO ESTÁ CERRADO → REABRIRLO
+    else {
+        if (!confirm("¿Restaurar este juego y permitir nuevos participantes?")) return;
+
+        await setDoc(gameRef, { status: "open" }, { merge: true });
+
+        gameStatus = "open";
+
+        // actualizar badge admin
+        document.getElementById("gameStatus").textContent = "ABIERTO";
+        document.getElementById("gameStatus").className = "status-badge status-open";
+
+        // cambiar texto del botón
+        const btn = document.getElementById("closeGameBtn");
+        btn.textContent = "🔒 Cerrar Juego";
+        btn.disabled = false;
+
+        alert("Juego restaurado y ahora está ABIERTO.");
+    }
+}
+
+
+        async function removeWinnerFromGame() {
+            if (currentWinner) {
+                await deleteDoc(doc(db, 'games', currentGameId, 'participants', currentWinner.id));
+                document.getElementById('winnerModal').classList.remove('active');
+                currentWinner = null;
+            }
+        }
+
+        document.getElementById('newGameBtn').addEventListener('click', initNewGame);
+        document.getElementById('addParticipantBtn').addEventListener('click', addParticipant);
+        document.getElementById('spinBtn').addEventListener('click', spinWheel);
+        document.getElementById('closeGameBtn').addEventListener('click', closeGame);
+        document.getElementById('closeModalBtn').addEventListener('click', () => {
+            document.getElementById('winnerModal').classList.remove('active');
+        });
+        document.getElementById('removeWinnerBtn').addEventListener('click', removeWinnerFromGame);
+
+        document.getElementById('nameInput').addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') addParticipant();
+        });
+
+        window.removeParticipant = removeParticipant;
+
+        const urlParams = new URLSearchParams(window.location.search);
+        const joinGameId = urlParams.get('join');
+
+        if (joinGameId) {
+            document.body.innerHTML = `
+                <div class="container" style="max-width: 500px; margin-top: 50px;">
+                    <div class="game-controls">
+                        <h2 style="text-align: center; color: #667eea;"> 🎡 Únete al Juego D&R 🎯 </h2>
+
+<!-- 🔥 TÍTULO DEL JUEGO (USUARIO REMOTO) -->
+<p id="joinGameTitle"
+   style="text-align:center; font-size:1.2rem; margin-top:5px;
+          font-weight:bold; color:#ff4b5c; animation:pulse 1.8s infinite;">
+</p>
+
+<!-- 🔥 ESTADO DEL JUEGO (USUARIO REMOTO) -->
+ <div style="text-align:center; margin-bottom:20px;">
+    <p>ID del Juego: <strong>${joinGameId}</strong></p>
+    <p>Estado: 
+        <span id="joinGameStatus" 
+              style="font-weight:bold; padding:0.5px 5px 0.5px 5px; border-radius:6px; color:white;">
+        </span>
+    </p>
+</div>
+
+                        <div class="input-group" style="flex-direction: column;">
+                            <input type="text" id="joinName" placeholder="Tu nombre" style="margin-bottom: 10px;" />
+                            <input type="text" id="joinNumber" placeholder="Tu número (opcional)" style="margin-bottom: 10px;" />
+                            <button class="btn btn-success" id="joinBtn" style="width: 100%;">✅ Unirme al Juego</button>
+                        </div>
+                        <div id="joinMessage" style="margin-top: 20px; text-align: center; font-weight: bold;"></div>
+                    </div>
+                </div>
+
+              <br>
+<div class="lists-section" style="margin-top:30px;">
+    <div class="participants-section">
+        <h3>👥 Participantes (<span id="joinParticipantCount">0</span>)</h3>
+        <div id="joinParticipantsList" style="max-height:200px; overflow-y:auto; border:1px solid #ddd; padding:10px; border-radius:8px;"></div>
+    </div>
+
+    <div class="winners-section" style="margin-top:20px;">
+        <h3>🏆 Ganadores (<span id="joinWinnerCount">0</span>)</h3>
+        <div id="joinWinnersList" style="max-height:150px; overflow-y:auto; border:1px solid #ddd; padding:10px; border-radius:8px;"></div>
+    </div>
+</div>
+
+
+            `;
+
+
+      document.getElementById('joinBtn').addEventListener('click', async () => 
+            {
+
+                const name = document.getElementById('joinName').value.trim();
+                const number = document.getElementById('joinNumber').value.trim();
+                const message = document.getElementById('joinMessage');
+             message.textContent = '';
+
+
+                if (!name) {
+                    message.style.color = 'red';
+                    message.textContent = '❌ Por favor ingresa tu nombre';
+                    return;
+                           }
+                const gameRef = doc(db, 'games', joinGameId);
+                const gameSnapshot = await getDoc(gameRef);
+
+                if (!gameSnapshot.exists()) {
+                    message.style.color = 'red';
+                    message.textContent = '❌ Este juego no existe';
+                    return;
+                                              }
+                if (gameSnapshot.data().status === 'closed') {
+                    message.style.color = 'red';
+                    message.textContent = '❌ Este juego está cerrado';
+                    return;
+                                                              }
+                const participantsRef = collection(db, 'games', joinGameId, 'participants');
+                
+
+// Verificar si ya existe el participante con mismo nombre y número 
+const existingSnapshot = await getDocs(participantsRef);
+const alreadyExists = existingSnapshot.docs.some(doc => {
+  const data = doc.data();
+  return (
+    data.name.toLowerCase() === name.toLowerCase() &&
+    data.number.trim() === number.trim()
+  );
+});
+
+if (alreadyExists) {
+  message.style.color = 'red';
+  message.textContent = '⚠️ Este nombre y número ya están registrados.';
+  return;
+}
+
+
+
+                await addDoc(participantsRef, {
+                    name: name,
+                    number: number,
+                    addedAt: Date.now()
+                                              });
+
+                message.style.color = 'green';
+                message.textContent = '✅ ¡Te has unido exitosamente!';
+                document.getElementById('joinName').value = '';
+                document.getElementById('joinNumber').value = '';
+            });
+
+
+  // ACTIVAR EL TÍTULO EN EL MODO “JOIN” 
+
+listenGameTitle(joinGameId, "joinGameTitle");
+
+
+// 🔥 Actualizar estado del juego en tiempo real (JOIN)
+function listenGameStatus(gameId) {
+    const gameRef = doc(db, "games", gameId);
+
+    onSnapshot(gameRef, (snap) => {
+        if (!snap.exists()) return;
+
+        const status = snap.data().status || "open";
+        const el = document.getElementById("joinGameStatus");
+
+        const nameInput = document.getElementById("joinName");
+        const numberInput = document.getElementById("joinNumber");
+        const joinBtn = document.getElementById("joinBtn");
+        const joinMsg = document.getElementById("joinMessage");
+
+        // Actualizar visual
+        if (el) {
+            if (status === "open") {
+                el.textContent = "ABIERTO";
+                el.style.backgroundColor = "#28a745";
+            } else {
+                el.textContent = "CERRADO";
+                el.style.backgroundColor = "#dc3545";
+            }
+        }
+
+        // 🔥 BLOQUEAR FORMULARIO AUTOMÁTICAMENTE
+        if (status === "closed") {
+            if (nameInput) nameInput.disabled = true;
+            if (numberInput) numberInput.disabled = true;
+            if (joinBtn) {
+                joinBtn.disabled = true;
+                joinBtn.style.opacity = "0.5";
+                joinBtn.style.cursor = "not-allowed";
+            }
+
+            if (joinMsg) {
+                joinMsg.style.color = "red";
+                joinMsg.textContent = "🛑 Este juego está cerrado. No puedes unirte.";
+            }
+        } else {
+            // 🔥 Si se reabre el juego, vuelve a habilitar
+            if (nameInput) nameInput.disabled = false;
+            if (numberInput) numberInput.disabled = false;
+            if (joinBtn) {
+                joinBtn.disabled = false;
+                joinBtn.style.opacity = "1";
+                joinBtn.style.cursor = "pointer";
+            }
+
+            if (joinMsg) joinMsg.textContent = "";
+        }
+
+    });
+}
+
+
+// Activar listener
+listenGameStatus(joinGameId);
+
+
+
+        // --- INICIO: listeners para el modo "join" (PEGA ESTO AQUÍ) ---
+/*
+  Coloca este bloque justo después del `document.getElementById('joinBtn').addEventListener(...)`
+  y todavía dentro del `if (joinGameId) { ... }`
+*/
+
+// Referencias a Firestore para el juego que se abrió por enlace
+
+const joinParticipantsRef = collection(db, 'games', joinGameId, 'participants');
+const joinWinnersRef = collection(db, 'games', joinGameId, 'winners');
+
+// Escuchar participantes en tiempo real y actualizar la vista del join
+
+onSnapshot(joinParticipantsRef, (snapshot) => {
+    const listDiv = document.getElementById('joinParticipantsList');
+    const countSpan = document.getElementById('joinParticipantCount');
+    const items = [];
+
+    snapshot.forEach(docSnap => {
+        const data = docSnap.data();
+        items.push({
+            id: docSnap.id,
+            name: data.name || '',
+            number: data.number || '',
+            addedAt: data.addedAt || 0
+        });
+    });
+
+    // Ordenar por fecha (el más nuevo primero)
+    items.sort((a,b) => (b.addedAt || 0) - (a.addedAt || 0));
+
+    countSpan.textContent = items.length;
+
+    if (items.length === 0) {
+        listDiv.innerHTML = '<div style="color:gray; text-align:center; padding:8px;">No hay participantes aún.</div>';
+        return;
+    }
+
+    let lastAddedId = items[0].id; // ← EL MÁS RECIENTE
+
+    listDiv.innerHTML = items.map(p => {
+        const isLast = p.id === lastAddedId;
+        const color = isLast ? "red" : "black";
+
+        const num = p.number
+            ? ` <span style="color:#666; font-size:0.9rem;">(${p.number})</span>`
+            : '';
+
+        return `
+            <div style="padding:6px 4px; border-bottom:1px solid #f0f0f0; color:${color}">
+                • ${escapeHtml(p.name)}${num}
+            </div>
+        `;
+    }).join('');
+});
+
+
+
+
+
+
+// Escuchar ganadores en tiempo real y actualizar la vista del join
+
+onSnapshot(joinWinnersRef, (snapshot) => {
+    const listDiv = document.getElementById('joinWinnersList');
+    const countSpan = document.getElementById('joinWinnerCount');
+    const items = [];
+
+    snapshot.forEach(docSnap => {
+        const data = docSnap.data();
+        items.push({
+            id: docSnap.id,
+            name: data.name || '',
+            number: data.number || '',
+            wonAt: data.wonAt || 0
+        });
+    });
+
+    // ordenar por fecha ganado (descendente)
+    items.sort((a, b) => (a.wonAt || 0) - (b.wonAt || 0));
+
+    countSpan.textContent = items.length;
+
+    if (items.length === 0) {
+        listDiv.innerHTML = '<div style="color:gray; text-align:center; padding:8px;">Aún no hay ganadores.</div>';
+        return;
+    }
+
+    listDiv.innerHTML = items.map(w => {
+        const time = w.wonAt ? ` <span style="font-size:0.8rem; color:#666;">${new Date(w.wonAt).toLocaleString()}</span>` : '';
+        const num = w.number ? ` <span style="color:#666; font-size:0.9rem;">(${w.number})</span>` : '';
+        return `<div style="padding:6px 4px; border-bottom:1px solid #f9f9f9;">🏆 ${escapeHtml(w.name)}${num}${time}</div>`;
+    }).join('');
+});
+
+// pequeña función helper para evitar inyección accidental al renderizar nombres
+function escapeHtml(str) {
+    return String(str)
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
+}
+// --- FIN: listeners para el modo "join" ---
+
+
+        }
+
+
+
+
+ function showToast(msg, type = 'success') {
+            const container = document.getElementById('toast-container');
+            const toast = document.createElement('div');
+            toast.className = `toast toast-${type}`;
+            toast.textContent = msg;
+            container.appendChild(toast);
+            
+            // Trigger reflow
+            void toast.offsetWidth;
+            toast.classList.add('show');
+            
+            setTimeout(() => {
+                toast.classList.remove('show');
+                setTimeout(() => toast.remove(), 300);
+            }, 3000);
+        }
+
 
     </script>
 
-
-
+ 
 </body>
 </html>
-
