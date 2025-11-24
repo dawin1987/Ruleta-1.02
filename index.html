@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -622,6 +621,92 @@ z-index: 9999;
         const db = getFirestore(app);
 
         let currentGameId = null;
+
+
+
+
+// -------------------------------------------------------
+// 🔥 ABRIR PANEL SECRETO (CTRL + SHIFT + D)
+// -------------------------------------------------------
+document.addEventListener("keydown", (e) => {
+    if (e.ctrlKey && e.shiftKey && e.key === "D") {
+        const panel = document.getElementById("adminHiddenPanel");
+        panel.style.display = panel.style.display === "none" ? "block" : "none";
+        loadAdminGameList();
+    }
+});
+
+// -------------------------------------------------------
+// 🔥 Cargar juegos en dos columnas (abiertos y cerrados)
+// -------------------------------------------------------
+async function loadAdminGameList() {
+    const q = collection(db, "games");
+    const snaps = await getDocs(q);
+
+    let openHTML = "";
+    let closedHTML = "";
+
+    snaps.forEach((docSnap) => {
+        const gameId = docSnap.id;
+        const data = docSnap.data();
+        const status = data.status || "open";
+        const created = data.createdAt ? new Date(data.createdAt).toLocaleString() : "N/A";
+
+        // 🔵 Juegos abiertos
+        if (status === "open") {
+            openHTML += `
+                <div style="border-bottom:1px solid #eee; padding:10px 0;">
+                    <strong>${gameId}</strong><br>
+                    <small>Creado: ${created}</small><br>
+                    <button onclick="closeLostGame('${gameId}')" 
+                            style="margin-top:5px; padding:6px 10px; border:none; border-radius:5px; background:#dc3545; color:white;">
+                        Cerrar Juego
+                    </button>
+                </div>
+            `;
+        }
+
+        // 🔴 Juegos cerrados
+        if (status === "closed") {
+            closedHTML += `
+                <div style="border-bottom:1px solid #eee; padding:10px 0;">
+                    <strong>${gameId}</strong><br>
+                    <small>Cerrado: ${created}</small><br>
+                    <button onclick="reopenLostGame('${gameId}')" 
+                            style="margin-top:5px; padding:6px 10px; border:none; border-radius:5px; background:#28a745; color:white;">
+                        Reabrir Juego
+                    </button>
+                </div>
+            `;
+        }
+    });
+
+    document.getElementById("adminOpenList").innerHTML = openHTML || "<p>No hay juegos abiertos.</p>";
+    document.getElementById("adminClosedList").innerHTML = closedHTML || "<p>No hay juegos cerrados.</p>";
+}
+
+// -------------------------------------------------------
+// 🔥 Cerrar un juego desde el panel secreto
+// -------------------------------------------------------
+window.closeLostGame = async (id) => {
+    await setDoc(doc(db, "games", id), { status: "closed" }, { merge: true });
+    alert("Juego cerrado correctamente");
+    loadAdminGameList();
+};
+
+// -------------------------------------------------------
+// 🔥 Reabrir un juego desde el panel secreto
+// -------------------------------------------------------
+window.reopenLostGame = async (id) => {
+    await setDoc(doc(db, "games", id), { status: "open" }, { merge: true });
+    alert("Juego reabierto correctamente");
+    loadAdminGameList();
+};
+
+
+
+
+
 
 
 // ---------------------------------------
@@ -1592,12 +1677,37 @@ function escapeHtml(str) {
         }
 
 
-
-
-
     </script>
 
-  
+  <!-- 🔥 Panel oculto del administrador (CTRL + SHIFT + D) -->
+<div id="adminHiddenPanel" 
+     style="display:none; position:fixed; top:20px; left:50%; transform:translateX(-50%);
+            background:white; padding:20px; border:1px solid #ddd; border-radius:10px;
+            box-shadow:0 0 12px rgba(0,0,0,0.15); width:650px; z-index:99999;">
+
+    <h2 style="margin-top:0; text-align:center;">Panel de Juegos</h2>
+
+    <div style="display:flex; gap:20px;">
+        
+        <!-- Columna: Juegos Abiertos -->
+        <div style="flex:1;">
+            <h3 style="color:green; text-align:center;">🟢 Juegos Abiertos</h3>
+            <div id="adminOpenList" style="max-height:400px; overflow-y:auto; border:1px solid #eee; padding:10px; border-radius:8px;">
+                Cargando...
+            </div>
+        </div>
+
+        <!-- Columna: Juegos Cerrados -->
+        <div style="flex:1;">
+            <h3 style="color:red; text-align:center;">🔴 Juegos Cerrados</h3>
+            <div id="adminClosedList" style="max-height:400px; overflow-y:auto; border:1px solid #eee; padding:10px; border-radius:8px;">
+                Cargando...
+            </div>
+        </div>
+
+    </div>
+</div>
+
 
 
 
