@@ -623,6 +623,11 @@ z-index: 9999;
         let currentGameId = null;
 
 
+window.openGameInNewTab = function(gameId) {
+    const url = `${window.location.origin}${window.location.pathname}?gameId=${gameId}`;
+    window.open(url, "_blank");
+};
+
 
 
 // -------------------------------------------------------
@@ -652,33 +657,52 @@ async function loadAdminGameList() {
         const status = data.status || "open";
         const created = data.createdAt ? new Date(data.createdAt).toLocaleString() : "N/A";
 
-        // 🔵 Juegos abiertos
-        if (status === "open") {
-            openHTML += `
-                <div style="border-bottom:1px solid #eee; padding:10px 0;">
-                    <strong>${gameId}</strong><br>
-                    <small>Creado: ${created}</small><br>
-                    <button onclick="closeLostGame('${gameId}')" 
-                            style="margin-top:5px; padding:6px 10px; border:none; border-radius:5px; background:#dc3545; color:white;">
-                        Cerrar Juego
-                    </button>
-                </div>
-            `;
-        }
+       // 🔵 Juegos abiertos
+if (status === "open") {
+    openHTML += `
+        <div style="border-bottom:1px solid #eee; padding:10px 0;">
+            <strong>${gameId}</strong><br>
+            <small>Creado: ${created}</small><br>
 
-        // 🔴 Juegos cerrados
-        if (status === "closed") {
-            closedHTML += `
-                <div style="border-bottom:1px solid #eee; padding:10px 0;">
-                    <strong>${gameId}</strong><br>
-                    <small>Cerrado: ${created}</small><br>
-                    <button onclick="reopenLostGame('${gameId}')" 
-                            style="margin-top:5px; padding:6px 10px; border:none; border-radius:5px; background:#28a745; color:white;">
-                        Reabrir Juego
-                    </button>
-                </div>
-            `;
-        }
+            <!-- 🆕 BOTÓN NUEVO -->
+            <button onclick="openGameInNewTab('${gameId}')"
+                    style="margin-top:5px; margin-right:5px; padding:6px 10px; 
+                           border:none; border-radius:5px; background:#007bff; color:white;">
+                Abrir Juego
+            </button>
+
+            <button onclick="closeLostGame('${gameId}')"
+                    style="margin-top:5px; padding:6px 10px; border:none; 
+                           border-radius:5px; background:#dc3545; color:white;">
+                Cerrar Juego
+            </button>
+        </div>
+    `;
+}
+
+// 🔴 Juegos cerrados
+if (status === "closed") {
+    closedHTML += `
+        <div style="border-bottom:1px solid #eee; padding:10px 0;">
+            <strong>${gameId}</strong><br>
+            <small>Cerrado: ${created}</small><br>
+
+            <!-- 🆕 BOTÓN NUEVO -->
+            <button onclick="openGameInNewTab('${gameId}')"
+                    style="margin-top:5px; margin-right:5px; padding:6px 10px; 
+                           border:none; border-radius:5px; background:#007bff; color:white;">
+                Abrir Juego
+            </button>
+
+            <button onclick="reopenLostGame('${gameId}')"
+                    style="margin-top:5px; padding:6px 10px; border:none; 
+                           border-radius:5px; background:#28a745; color:white;">
+                Reabrir Juego
+            </button>
+        </div>
+    `;
+}
+
     });
 
     document.getElementById("adminOpenList").innerHTML = openHTML || "<p>No hay juegos abiertos.</p>";
@@ -753,15 +777,24 @@ function listenGameTitle(gameId, displayElementId) {
     });
 }
 
-
+        
         let participants = [];
         let winners = [];
         let isSpinning = false;
         let gameStatus = 'open';
         let currentWinner = null;
 
+
+
+
+
+
  // Contexto de Audio para efectos precisos
         const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+
+
+
+
 
 // ✅ Restaurar juego anterior si existe en localStorage
 const savedGameId = localStorage.getItem('currentGameId');
@@ -791,13 +824,13 @@ if (savedGameId) {
 
             closeBtn.textContent = "🔒 Cerrar Juego";
             closeBtn.disabled = false;
-        } else {
+                                } else {
             statusEl.textContent = "CERRADO";
             statusEl.className = "status-badge status-closed";
 
             closeBtn.textContent = "🔁 Restaurar Juego Actual";
             closeBtn.disabled = false;
-        }
+                                          }
     });
 
  // Reactivar listeners
@@ -815,6 +848,10 @@ loadGameTitle();
     // Mostrar QR y enlace
     generateQR();
 }
+
+
+
+
 
 
 
@@ -852,6 +889,23 @@ if (status === "open") {
     btn.textContent = "🔁 Restaurar Juego Actual";
     btn.disabled = false;
 }
+
+
+
+
+const urlParams = new URLSearchParams(window.location.search);
+const gameIdFromURL = urlParams.get("gameId");
+
+if (gameIdFromURL) {
+    currentGameId = gameIdFromURL;
+    localStorage.setItem("currentGameId", currentGameId);
+
+    // Cargar todo lo relacionado al juego
+    loadGameData(currentGameId);
+
+    document.getElementById("gameIdDisplay").textContent = "ID del Juego: " + currentGameId;
+}
+
 
 
 
@@ -905,6 +959,8 @@ showToast('✅ Nuevo juego creado exitosamente');
         drawWheel();
     });
 }
+
+
 
 
 
@@ -1505,13 +1561,6 @@ listenGameStatus(joinGameId);
 
 
 
-
-
-
-
-
-
-
 // -----------------------------------------------------
 // 🔥 Generar QR en el modo JOIN
 // -----------------------------------------------------
@@ -1535,15 +1584,6 @@ function generateJoinQR() {
 
 // Ejecutarlo
 generateJoinQR();
-
-
-
-
-
-
-
-
-
 
 
 
@@ -1602,9 +1642,6 @@ onSnapshot(joinParticipantsRef, (snapshot) => {
         `;
     }).join('');
 });
-
-
-
 
 
 
