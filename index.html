@@ -644,69 +644,97 @@ document.addEventListener("keydown", (e) => {
 // -------------------------------------------------------
 // 🔥 Cargar juegos en dos columnas (abiertos y cerrados)
 // -------------------------------------------------------
+// Variable global para guardar los juegos descargados temporalmente
+let allFetchedGames = [];
+
+// -------------------------------------------------------
+// 🔥 Cargar juegos y guardarlos en memoria
+// -------------------------------------------------------
 async function loadAdminGameList() {
+    document.getElementById("adminOpenList").innerHTML = "Cargando...";
+    document.getElementById("adminClosedList").innerHTML = "Cargando...";
+
     const q = collection(db, "games");
     const snaps = await getDocs(q);
 
-    let openHTML = "";
-    let closedHTML = "";
+    allFetchedGames = []; // Limpiar lista anterior
 
     snaps.forEach((docSnap) => {
-        const gameId = docSnap.id;
-        const data = docSnap.data();
-        const status = data.status || "open";
-        const created = data.createdAt ? new Date(data.createdAt).toLocaleString() : "N/A";
-
-       // 🔵 Juegos abiertos
-if (status === "open") {
-    openHTML += `
-        <div style="border-bottom:1px solid #eee; padding:10px 0;">
-            <strong>${gameId}</strong><br>
-            <small>Creado: ${created}</small><br>
-
-            <!-- 🆕 BOTÓN NUEVO -->
-            <button onclick="openGameInNewTab('${gameId}')"
-                    style="margin-top:5px; margin-right:5px; padding:6px 10px; 
-                           border:none; border-radius:5px; background:#007bff; color:white;">
-                Abrir Juego
-            </button>
-
-            <button onclick="closeLostGame('${gameId}')"
-                    style="margin-top:5px; padding:6px 10px; border:none; 
-                           border-radius:5px; background:#dc3545; color:white;">
-                Cerrar Juego
-            </button>
-        </div>
-    `;
-}
-
-// 🔴 Juegos cerrados
-if (status === "closed") {
-    closedHTML += `
-        <div style="border-bottom:1px solid #eee; padding:10px 0;">
-            <strong>${gameId}</strong><br>
-            <small>Cerrado: ${created}</small><br>
-
-            <!-- 🆕 BOTÓN NUEVO -->
-            <button onclick="openGameInNewTab('${gameId}')"
-                    style="margin-top:5px; margin-right:5px; padding:6px 10px; 
-                           border:none; border-radius:5px; background:#007bff; color:white;">
-                Abrir Juego
-            </button>
-
-            <button onclick="reopenLostGame('${gameId}')"
-                    style="margin-top:5px; padding:6px 10px; border:none; 
-                           border-radius:5px; background:#28a745; color:white;">
-                Reabrir Juego
-            </button>
-        </div>
-    `;
-}
-
+        allFetchedGames.push({
+            id: docSnap.id,
+            ...docSnap.data()
+        });
     });
 
-    document.getElementById("adminOpenList").innerHTML = openHTML || "<p>No hay juegos abiertos.</p>";
-    document.getElementById("adminClosedList").innerHTML = closedHTML || "<p>No hay juegos cerrados.</p>";
+    // Renderizar la lista completa inicial
+    renderGameLists(""); 
+}
+
+// -------------------------------------------------------
+// 🔥 Renderizar listas con filtro (Buscador)
+// -------------------------------------------------------
+function renderGameLists(filterText) {
+    let openHTML = "";
+    let closedHTML = "";
+    
+    // Convertir búsqueda a minúsculas para comparar
+    const term = filterText.toLowerCase().trim();
+
+    allFetchedGames.forEach((game) => {
+        // FILTRO: Si el ID no incluye el texto buscado, lo saltamos
+        if (!game.id.toLowerCase().includes(term)) return;
+
+        const gameId = game.id;
+        const status = game.status || "open";
+        const created = game.createdAt ? new Date(game.createdAt).toLocaleString() : "N/A";
+
+        // Plantilla HTML común
+        const cardHTML = `
+            <div style="border-bottom:1px solid #eee; padding:10px 0;">
+                <strong>${gameId}</strong><br>
+                <small>${status === 'open' ? 'Creado' : 'Cerrado'}: ${created}</small><br>
+                
+                <button onclick="openGameInNewTab('${gameId}')"
+                        style="margin-top:5px; margin-right:5px; padding:6px 10px; 
+                               border:none; border-radius:5px; background:#007bff; color:white; cursor:pointer;">
+                    Abrir Juego
+                </button>
+
+                ${status === 'open' 
+                    ? `<button onclick="closeLostGame('${gameId}')"
+                            style="margin-top:5px; padding:6px 10px; border:none; 
+                                   border-radius:5px; background:#dc3545; color:white; cursor:pointer;">
+                        Cerrar Juego
+                       </button>`
+                    : `<button onclick="reopenLostGame('${gameId}')"
+                            style="margin-top:5px; padding:6px 10px; border:none; 
+                                   border-radius:5px; background:#28a745; color:white; cursor:pointer;">
+                        Reabrir Juego
+                       </button>`
+                }
+            </div>
+        `;
+
+        if (status === "open") {
+            openHTML += cardHTML;
+        } else {
+            closedHTML += cardHTML;
+        }
+    });
+
+    document.getElementById("adminOpenList").innerHTML = openHTML || "<p style='text-align:center; color:#999'>No se encontraron juegos.</p>";
+    document.getElementById("adminClosedList").innerHTML = closedHTML || "<p style='text-align:center; color:#999'>No se encontraron juegos.</p>";
+}
+
+// -------------------------------------------------------
+// 🔥 Evento del Buscador (INPUT)
+// -------------------------------------------------------
+// Aseguramos que el elemento existe antes de agregar el evento
+const searchInput = document.getElementById("adminSearchInput");
+if (searchInput) {
+    searchInput.addEventListener("input", (e) => {
+        renderGameLists(e.target.value);
+    });
 }
 
 // -------------------------------------------------------
@@ -783,6 +811,29 @@ function listenGameTitle(gameId, displayElementId) {
         let isSpinning = false;
         let gameStatus = 'open';
         let currentWinner = null;
+
+
+
+
+
+
+
+// Función para obtener el texto de la posición (1er, 2do, etc.)
+function getRankLabel(index) {
+    const pos = index + 1;
+    if (pos === 1) return "1er";
+    if (pos === 2) return "2do";
+    if (pos === 3) return "3er";
+    if (pos === 7) return "7mo";
+    if (pos === 8) return "8vo";
+    if (pos === 9) return "9no";
+    return pos + "to"; // Para 4to, 5to, 6to, 10to, etc.
+}
+
+
+
+
+
 
 
 
@@ -1072,19 +1123,20 @@ list.innerHTML = participants.map((p) => {
 
 
 
-        function updateWinnersList() {
+        function updateWinnersList() 
+       {
             const list = document.getElementById('winnersList');
             document.getElementById('winnerCount').textContent = winners.length;
             
             if (winners.length === 0) {
                 list.innerHTML = '<div class="empty-state">Aún no hay ganadores</div>';
                 return;
-            }
+                                      }
             
-  // 🔹 Ordenar por hora ganada (ascendente: del primero al último)
-    winners.sort((a, b) => (a.wonAt || 0) - (b.wonAt || 0));
+              // 🔹 Ordenar por hora ganada (ascendente: del primero al último)
+               winners.sort((a, b) => (a.wonAt || 0) - (b.wonAt || 0));
 
-    // 🔹 Mostrar los ganadores ordenados
+            // 🔹 Mostrar los ganadores ordenados
 
             list.innerHTML = winners.map(w => `
                 <div class="winner-item">
@@ -1723,6 +1775,11 @@ function escapeHtml(str) {
             box-shadow:0 0 12px rgba(0,0,0,0.15); width:650px; z-index:99999;">
 
     <h2 style="margin-top:0; text-align:center;">Panel de Juegos</h2>
+    
+    <div style="margin-bottom: 15px; text-align: center;">
+        <input type="text" id="adminSearchInput" placeholder="🔍 Buscar ID del juego..." 
+               style="width: 80%; padding: 10px; border: 1px solid #ccc; border-radius: 5px; font-size: 1rem;">
+    </div>
 
     <div style="display:flex; gap:20px;">
         
