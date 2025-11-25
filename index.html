@@ -495,21 +495,23 @@ z-index: 9999;
 
 
 
-       <header>
+  <header>
             <h1>🎡 Juega la Ruleta Dinámica D&R</h1>
+        <div id="adminGameStartTime" style="text-align:center; margin-bottom: 20px;">
+        </div>
             <p class="subtitle">Gira la ruleta y descubre al ganador - Comparte el código QR para participación remota</p>
         
-<!-- 🔥 TÍTULO EDITABLE DE LA RIFA (ADMIN) -->
-    <div style="margin-top:10px; text-align:center;">
-        <input id="gameTitleInput" 
+          <!-- 🔥 TÍTULO EDITABLE DE LA RIFA (ADMIN) -->
+        <div style="margin-top:10px; text-align:center;">
+          <input id="gameTitleInput" 
                type="text" 
                placeholder="Escribe el título de la rifa..."
                style="padding:8px; width:80%; max-width:350px; text-align:center; border-radius:8px;">
-        <p id="gameTitleDisplay" 
+            <p id="gameTitleDisplay" 
            style="margin-top:10px; font-size:1.3rem; font-weight:bold; color:#ff4b5c; animation:pulse 1.8s infinite;">
         </p>
-    </div>
-</header>
+       </div>
+  </header>
 
 <!-- 🔥 Animación Pulse -->
 <style>
@@ -604,6 +606,13 @@ z-index: 9999;
 
    
     <script type="module">
+
+
+
+
+
+
+
         import { initializeApp } from "https://www.gstatic.com/firebasejs/12.5.0/firebase-app.js";
         import { getFirestore, collection, doc, setDoc, onSnapshot, deleteDoc, addDoc, getDoc, query, getDocs } from "https://www.gstatic.com/firebasejs/12.5.0/firebase-firestore.js";
 
@@ -1123,27 +1132,33 @@ list.innerHTML = participants.map((p) => {
 
 
 
-        function updateWinnersList() 
-       {
+     function updateWinnersList() {
             const list = document.getElementById('winnersList');
             document.getElementById('winnerCount').textContent = winners.length;
             
             if (winners.length === 0) {
                 list.innerHTML = '<div class="empty-state">Aún no hay ganadores</div>';
                 return;
-                                      }
+            }
             
-              // 🔹 Ordenar por hora ganada (ascendente: del primero al último)
-               winners.sort((a, b) => (a.wonAt || 0) - (b.wonAt || 0));
+            // 🔹 Ordenar por hora ganada (ascendente: del primero al último)
+            winners.sort((a, b) => (a.wonAt || 0) - (b.wonAt || 0));
 
-            // 🔹 Mostrar los ganadores ordenados
-
-            list.innerHTML = winners.map(w => `
+            // 🔹 Mostrar los ganadores con su posición (1er, 2do...)
+            list.innerHTML = winners.map((w, index) => {
+                const rank = getRankLabel(index); // Calculamos la posición
+                
+                return `
                 <div class="winner-item">
-                    <span>🏆 ${w.name} ${w.number ? `(${w.number})` : ''}</span>
-                    <span style="font-size: 0.85rem; color: #666;">${new Date(w.wonAt).toLocaleTimeString()}</span>
+                    <span>
+                        🏆 <b style="color:#d35400; margin-right:5px;">${rank}</b> 
+                        ${w.name} ${w.number ? `(${w.number})` : ''}
+                    </span>
+                    <span style="font-size: 0.85rem; color: #666;">
+                        ${new Date(w.wonAt).toLocaleTimeString()}
+                    </span>
                 </div>
-            `).join('');
+            `}).join('');
         }
 
         function drawWheel() {
@@ -1408,6 +1423,17 @@ let lastTick = -1;
                 <div class="container" style="max-width: 500px; margin-top: 50px;">
                     <div class="game-controls">
                         <h2 style="text-align: center; color: #667eea;"> 🎡 Únete al Juego D&R 🎯 </h2>
+                    
+
+
+
+    
+    <div id="joinGameStartTime">
+        </div>
+    
+
+
+
 
 <!-- 🔥 TÍTULO DEL JUEGO (USUARIO REMOTO) -->
 <p id="joinGameTitle"
@@ -1699,6 +1725,7 @@ onSnapshot(joinParticipantsRef, (snapshot) => {
 
 // Escuchar ganadores en tiempo real y actualizar la vista del join
 
+// Escuchar ganadores en tiempo real y actualizar la vista del join
 onSnapshot(joinWinnersRef, (snapshot) => {
     const listDiv = document.getElementById('joinWinnersList');
     const countSpan = document.getElementById('joinWinnerCount');
@@ -1714,7 +1741,7 @@ onSnapshot(joinWinnersRef, (snapshot) => {
         });
     });
 
-    // ordenar por fecha ganado (descendente)
+    // ordenar por fecha ganado (el primero que ganó va primero)
     items.sort((a, b) => (a.wonAt || 0) - (b.wonAt || 0));
 
     countSpan.textContent = items.length;
@@ -1724,12 +1751,26 @@ onSnapshot(joinWinnersRef, (snapshot) => {
         return;
     }
 
-    listDiv.innerHTML = items.map(w => {
-        const time = w.wonAt ? ` <span style="font-size:0.8rem; color:#666;">${new Date(w.wonAt).toLocaleString()}</span>` : '';
+    listDiv.innerHTML = items.map((w, index) => {
+        const rank = getRankLabel(index); // Calculamos posición
+        
+        const time = w.wonAt ? ` <span style="font-size:0.8rem; color:#666; float:right;">${new Date(w.wonAt).toLocaleTimeString()}</span>` : '';
         const num = w.number ? ` <span style="color:#666; font-size:0.9rem;">(${w.number})</span>` : '';
-        return `<div style="padding:6px 4px; border-bottom:1px solid #f9f9f9;">🏆 ${escapeHtml(w.name)}${num}${time}</div>`;
+        
+        return `
+            <div style="padding:8px 4px; border-bottom:1px solid #f9f9f9;">
+                🏆 <b style="color:#d35400; margin-right:4px;">${rank}</b> 
+                ${escapeHtml(w.name)}${num}
+                ${time}
+            </div>
+        `;
     }).join('');
 });
+
+
+
+
+
 
 // pequeña función helper para evitar inyección accidental al renderizar nombres
 function escapeHtml(str) {
