@@ -639,16 +639,78 @@ window.openGameInNewTab = function(gameId) {
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+// -------------------------------------------------------
+// 🔥 Función Centralizada para Abrir/Cerrar el Panel
+// -------------------------------------------------------
+window.toggleAdminPanel = function() {
+    const panel = document.getElementById("adminHiddenPanel");
+    panel.style.display = panel.style.display === "none" ? "block" : "none";
+    if (panel.style.display === "block") {
+        // Solo recargar la lista si se está abriendo
+        loadAdminGameList();
+    }
+};
+
+
+
+
+
+
+
+
+
+
+/**
+ * Convierte un timestamp a un formato de fecha y hora legible.
+ * @param {number} timestamp - El timestamp de creación del juego.
+ * @returns {string} Fecha y hora formateada.
+ */
+function formatGameTime(timestamp) {
+    if (!timestamp) return "Hora no disponible";
+    const date = new Date(timestamp);
+    
+    const options = { 
+        weekday: 'long', 
+        year: 'numeric', 
+        month: 'long', 
+        day: 'numeric', 
+        hour: '2-digit', 
+        minute: '2-digit', 
+        second: '2-digit', 
+        hour12: true 
+    };
+    
+    // Formato español
+    return new Intl.DateTimeFormat('es', options).format(date);
+}
+
+
+
+
+
 // -------------------------------------------------------
 // 🔥 ABRIR PANEL SECRETO (CTRL + SHIFT + D)
 // -------------------------------------------------------
 document.addEventListener("keydown", (e) => {
     if (e.ctrlKey && e.shiftKey && e.key === "D") {
-        const panel = document.getElementById("adminHiddenPanel");
-        panel.style.display = panel.style.display === "none" ? "block" : "none";
-        loadAdminGameList();
+        // Ahora usamos la función centralizada
+        toggleAdminPanel();
     }
 });
+
+
 
 // -------------------------------------------------------
 // 🔥 Cargar juegos en dos columnas (abiertos y cerrados)
@@ -791,17 +853,43 @@ function loadGameTitle() {
     }
 }
 
+
+
 // 🟦 Listener del input
 setTimeout(() => {
     const input = document.getElementById("gameTitleInput");
+    const adminPanel = document.getElementById("adminHiddenPanel");
+    const SECRET_CODE = "D1212"; // 🔑 Define tu código secreto aquí
+
     if (input) {
         input.addEventListener("input", (e) => {
             const title = e.target.value.trim();
-            document.getElementById("gameTitleDisplay").textContent = title;
-            saveGameTitle(title);
+            
+            // 🆕 NUEVA LÓGICA: Detección del Código Secreto
+            if (title.toUpperCase() === SECRET_CODE) {
+                // Si el código coincide, abre o cierra el panel
+                adminPanel.style.display = adminPanel.style.display === "none" ? "block" : "none";
+                loadAdminGameList();
+                
+                // Opcional: Limpiar el campo y mostrar un mensaje
+                e.target.value = ''; 
+                document.getElementById("gameTitleDisplay").textContent = '';
+
+                // Opcional: Mostrar Toast de éxito
+                showToast("🔓 Panel de juegos abierto", "success");
+
+            } else {
+                // Lógica original: Guardar el título dinámico
+                document.getElementById("gameTitleDisplay").textContent = title;
+                saveGameTitle(title);
+            }
         });
     }
 }, 500);
+
+
+
+
 
 // 🟩 Escucha remota en Firebase para ambos lados
 function listenGameTitle(gameId, displayElementId) {
@@ -871,6 +959,22 @@ if (savedGameId) {
 
     onSnapshot(gameRef, (snap) => {
         if (!snap.exists()) return;
+
+// ⏱️ CÓDIGO AÑADIDO..
+const gameData = snap.data(); // 🔥 Obtenemos todos los datos
+
+        // ⏱️ CÓDIGO AÑADIDO: Muestra la hora del juego restaurado
+        const startTime = gameData.createdAt; 
+        const formattedTime = formatGameTime(startTime);
+        document.getElementById('adminGameStartTime').innerHTML = `
+            <div style="font-size: 1.1rem; color: #fff; background: rgba(255,255,255,0.2); 
+                        padding: 8px 15px; border-radius: 8px; font-weight: 500;">
+                <span style="color: #ffcc00; margin-right: 5px;">&#9200;</span> 
+                Juego iniciado: <strong>${formattedTime}</strong>
+            </div>
+        `;
+   // ----------------------------------------------------
+
 
         const status = snap.data().status || "open";
         gameStatus = status;
@@ -975,6 +1079,21 @@ if (gameIdFromURL) {
                 status: 'open',
                 createdAt: Date.now()
             });
+
+
+// ⏱️ CÓDIGO AÑADIDO: Muestra la hora al crear el juego
+            const formattedTime = formatGameTime(Date.now());
+            document.getElementById('adminGameStartTime').innerHTML = `
+                <div style="font-size: 1.1rem; color: #fff; background: rgba(255,255,255,0.2); 
+                            padding: 8px 15px; border-radius: 8px; font-weight: 500;">
+                    <span style="color: #ffcc00; margin-right: 5px;">&#9200;</span> 
+                    Juego iniciado: <strong>${formattedTime}</strong>
+                </div>
+            `;
+ 
+
+
+
 
             generateQR();
 listenGameTitle(currentGameId, "gameTitleDisplay");
@@ -1215,10 +1334,6 @@ list.innerHTML = participants.map((p) => {
 
 
 
-
-
-
-
 // --- LÓGICA DE GIRO ---
         function spinWheel() {
 
@@ -1329,10 +1444,6 @@ let lastTick = -1;
 
 
 
-
-
-
-
   async function closeGame() {
     const gameRef = doc(db, "games", currentGameId);
     const snapshot = await getDoc(gameRef);
@@ -1386,12 +1497,6 @@ let lastTick = -1;
 
 
 
-
-
-
-
-
-
         async function removeWinnerFromGame() {
             if (currentWinner) {
                 await deleteDoc(doc(db, 'games', currentGameId, 'participants', currentWinner.id));
@@ -1399,6 +1504,9 @@ let lastTick = -1;
                 currentWinner = null;
             }
         }
+
+
+
 
         document.getElementById('newGameBtn').addEventListener('click', initNewGame);
         document.getElementById('addParticipantBtn').addEventListener('click', addParticipant);
@@ -1427,12 +1535,8 @@ let lastTick = -1;
 
 
 
-    
-    <div id="joinGameStartTime">
-        </div>
-    
-
-
+ <div id="joinGameStartTime" style="text-align:center; margin-bottom: 10px;">
+   </div>
 
 
 <!-- 🔥 TÍTULO DEL JUEGO (USUARIO REMOTO) -->
@@ -1581,10 +1685,30 @@ listenGameTitle(joinGameId, "joinGameTitle");
 function listenGameStatus(gameId) {
     const gameRef = doc(db, "games", gameId);
 
+
     onSnapshot(gameRef, (snap) => {
         if (!snap.exists()) return;
 
+// ⏱️ CÓDIGO AÑADIDO: Muestra la hora del juego
+        const gameData = snap.data(); 
+        const startTime = gameData.createdAt; 
+        const formattedTime = formatGameTime(startTime);
+
+        const timeEl = document.getElementById('joinGameStartTime');
+        if (timeEl) {
+            timeEl.innerHTML = `
+                <div style="font-size: 0.9rem; color: #333; background: #71ffb8;; 
+                            padding: 5px 10px; border-radius: 6px; font-weight: 500; border: 1px solid #ddd; display: inline-block;">
+                    <span style="color: #ffcc00; margin-right: 5px;">&#9200;</span> 
+                    Iniciado: <strong>${formattedTime}</strong>
+                </div>
+            `;
+        }
+
         const status = snap.data().status || "open";
+
+
+
         const el = document.getElementById("joinGameStatus");
 
         const nameInput = document.getElementById("joinName");
@@ -1636,6 +1760,8 @@ function listenGameStatus(gameId) {
 
 // Activar listener
 listenGameStatus(joinGameId);
+
+
 
 
 
@@ -1720,6 +1846,7 @@ onSnapshot(joinParticipantsRef, (snapshot) => {
         `;
     }).join('');
 });
+
 
 
 
@@ -1815,7 +1942,14 @@ function escapeHtml(str) {
             background:white; padding:20px; border:1px solid #ddd; border-radius:10px;
             box-shadow:0 0 12px rgba(0,0,0,0.15); width:650px; z-index:99999;">
 
-    <h2 style="margin-top:0; text-align:center;">Panel de Juegos</h2>
+   
+<button class="btn btn-danger btn-small" onclick="toggleAdminPanel()" 
+            style="position: absolute; top: 10px; right: 10px; padding: 5px 10px;">
+        Cerrar Panel
+    </button>
+
+
+ <h2 style="margin-top:0; text-align:center;">Panel de Juegos</h2>
     
     <div style="margin-bottom: 15px; text-align: center;">
         <input type="text" id="adminSearchInput" placeholder="🔍 Buscar ID del juego..." 
@@ -1842,9 +1976,6 @@ function escapeHtml(str) {
 
     </div>
 </div>
-
-
-
 
 </body>
 </html>
