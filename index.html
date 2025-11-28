@@ -424,6 +424,16 @@ z-index: 9999;
         height: 300px;
         margin: 20px auto;   
                      }
+
+.participants-section1
+ {
+            background: red;
+            padding: 20px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+
+
     .arrow {
     border-bottom: blue;
     /* object-fit: initial; */
@@ -527,8 +537,7 @@ z-index: 9999;
  <div id="toast-container"></div>
 
 
-
-        <div class="game-controls">
+ <div class="game-controls">
             <div class="game-info">
                 <div>
                     <span class="game-id">ID del Juego: <strong id="gameIdDisplay">-</strong></span>
@@ -539,14 +548,42 @@ z-index: 9999;
                     <button class="btn btn-primary" id="newGameBtn">🎮 Nuevo Juego</button>
                     <button class="btn btn-danger" id="closeGameBtn" disabled>🔒 Cerrar Juego</button>
                 </div>
+
+<div id="requiredFieldsControls" style="text-align:center; margin: 1px 0; padding:15px; border-radius:10px; background: rgb(255 102 102 / 83%); color:white; border: 1px solid rgba(255,255,255,0.2);">
+    <strong style="display:block; margin-bottom: 10px; font-size: 1.1rem;">Requisitos de Registro:</strong>
+    <div style="display:inline-flex; gap: 30px;">
+        <label style="cursor:pointer; font-weight: 500;">
+            <input type="checkbox" id="requireNumberToggle" onchange="toggleRequiredField('number')" style="margin-right: 5px; transform: scale(1.3);">
+            No. Obligatorio
+        </label>
+        <label style="cursor:pointer; font-weight: 500;">
+            <input type="checkbox" id="requireCedulaToggle" onchange="toggleRequiredField('cedula')" style="margin-right: 5px; transform: scale(1.3);">
+            Céd. Obligatoria
+        </label>
+    </div>
+</div>
+
+
             </div>
+
+
+
+
+
 
             <div class="input-group">
                 <input type="text" class="nombreparticipante" id="nameInput" placeholder="Nombre del participante" />
-                <input type="text" class="numero" id="numberInput" placeholder="Número" />
+                <input type="tel" class="numero" id="numberInput" placeholder="Número" />
                 <button class="btn btn-success" id="addParticipantBtn">➕ Agregar</button>
             </div>
+
+<input type="number" id="participantCedulaInput" placeholder="Cédula/ID (opcional)" class="text-input" style="flex: 1.5;">
+
         </div>
+
+
+
+
 
         <div class="main-content">
             <div class="wheel-section">
@@ -571,11 +608,23 @@ z-index: 9999;
                 </button>
             </div>
 
-            <div class="participants-section">
-                <h2>Participantes (<span id="participantCount">0</span>)</h2>
-                <div class="participants-list" id="participantsList"></div>
-            </div>
+
+
+
+             <div class="participants-section">
+    <div class="participants-section1" style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
+        
+       <h2 style="margin:0;">Participantes (<span id="participantCount">0</span>)</h2>
+        <button onclick="exportToExcel()" class="btn-successexcel" style="padding: 5px 15px; font-size: 0.9rem; border-radius: 15px;">
+            📥 Excel
+        </button>
+    </div>
+    <div class="participants-list" id="participantsList"></div>
+</div>
+
         </div>
+
+
 
         <div class="qr-section">
             <h2>📱 Código QR para Participación Remota</h2>
@@ -614,7 +663,7 @@ z-index: 9999;
 
 
         import { initializeApp } from "https://www.gstatic.com/firebasejs/12.5.0/firebase-app.js";
-        import { getFirestore, collection, doc, setDoc, onSnapshot, deleteDoc, addDoc, getDoc, query, getDocs } from "https://www.gstatic.com/firebasejs/12.5.0/firebase-firestore.js";
+        import { getFirestore, collection, doc, setDoc, onSnapshot, deleteDoc, addDoc, getDoc, query, getDocs, updateDoc } from "https://www.gstatic.com/firebasejs/12.5.0/firebase-firestore.js";
 
         const firebaseConfig = {
             apiKey: "AIzaSyAxiTkjfh_80fTdXwzLGOl2YMlHsCOsyRM",
@@ -908,7 +957,9 @@ function listenGameTitle(gameId, displayElementId) {
         let isSpinning = false;
         let gameStatus = 'open';
         let currentWinner = null;
-
+        let unsubscribeFromGame = null;
+    // 🔥 CORRECCIÓN 1: Inicializar el estado de los campos requeridos
+      window.currentRequiredFields = { number: true, cedula: true }; 
 
 
 
@@ -947,23 +998,42 @@ function getRankLabel(index) {
 // ✅ Restaurar juego anterior si existe en localStorage
 const savedGameId = localStorage.getItem('currentGameId');
 
-if (savedGameId) {
-    currentGameId = savedGameId;
-    console.log("♻️ Juego restaurado automáticamente:", currentGameId);
 
-    // Mostrar ID
-    document.getElementById('gameIdDisplay').textContent = currentGameId;
 
-    // Escuchar estado REAL del juego al cargar
-    const gameRef = doc(db, "games", currentGameId);
 
-    onSnapshot(gameRef, (snap) => {
+// index.html (Línea ~460, AÑADIR NUEVA FUNCIÓN)
+
+function setupGameListener(gameId) {
+    // 1. Cancelar cualquier listener anterior si existe
+    if (unsubscribeFromGame) {
+        unsubscribeFromGame();
+    }
+    
+    const gameRef = doc(db, "games", gameId);
+    
+    // 2. Asignar el nuevo listener y guardar la función de desuscripción
+    unsubscribeFromGame = onSnapshot(gameRef, (snap) => {
         if (!snap.exists()) return;
 
-// ⏱️ CÓDIGO AÑADIDO..
-const gameData = snap.data(); // 🔥 Obtenemos todos los datos
 
-        // ⏱️ CÓDIGO AÑADIDO: Muestra la hora del juego restaurado
+
+
+        // ⏱️ CÓDIGO EXISTENTE: Muestra la hora del juego
+        const gameData = snap.data(); 
+
+
+// 🔥🔥🔥 NUEVO CÓDIGO: RECUPERAR ESTADO DE LOS CHECKBOX 🔥🔥🔥
+// 1. Leemos la configuración guardada en Firebase (o ponemos false por defecto)
+        const requiredFields = gameData.required || { number: false, cedula: false };
+
+
+// 2. Pintamos los checkbox visualmente (activado/desactivado)
+        renderRequiredFieldToggles(requiredFields);
+
+// 3. Actualizamos la validación interna de los formularios
+        updateFormRequiredStatus(requiredFields);
+        // 🔥🔥🔥 FIN DEL NUEVO CÓDIGO 🔥🔥🔥
+
         const startTime = gameData.createdAt; 
         const formattedTime = formatGameTime(startTime);
         document.getElementById('adminGameStartTime').innerHTML = `
@@ -973,29 +1043,40 @@ const gameData = snap.data(); // 🔥 Obtenemos todos los datos
                 Juego iniciado: <strong>${formattedTime}</strong>
             </div>
         `;
-   // ----------------------------------------------------
-
-
+        
         const status = snap.data().status || "open";
         gameStatus = status;
 
         const statusEl = document.getElementById("gameStatus");
         const closeBtn = document.getElementById("closeGameBtn");
 
+        // 🔑 LÓGICA CLAVE: Esto actualiza el botón en tiempo real.
         if (status === "open") {
             statusEl.textContent = "ABIERTO";
             statusEl.className = "status-badge status-open";
 
             closeBtn.textContent = "🔒 Cerrar Juego";
             closeBtn.disabled = false;
-                                } else {
+        } else {
             statusEl.textContent = "CERRADO";
             statusEl.className = "status-badge status-closed";
 
             closeBtn.textContent = "🔁 Restaurar Juego Actual";
             closeBtn.disabled = false;
-                                          }
+        }
     });
+}
+
+if (savedGameId) {
+    currentGameId = savedGameId;
+    console.log("♻️ Juego restaurado automáticamente:", currentGameId);
+
+    // Mostrar ID
+    document.getElementById('gameIdDisplay').textContent = currentGameId;
+
+   
+
+setupGameListener(currentGameId); // ⬅️ NUEVA LÍNEA
 
  // Reactivar listeners
     listenToParticipants();
@@ -1031,16 +1112,23 @@ loadGameTitle();
 
         async function initNewGame() {
  if(currentGameId && !confirm("¿Crear nuevo juego? El actual se perderá de la vista.")) return;
-            currentGameId = generateGameId();
+            
+// 🔑 PASO CLAVE: Detener el listener del juego anterior
+    if (unsubscribeFromGame) {
+        unsubscribeFromGame();
+        unsubscribeFromGame = null;
+    }
+
+
+
+currentGameId = generateGameId();
 localStorage.setItem('currentGameId', currentGameId);
             participants = [];
             winners = [];
             gameStatus = 'open';
             
-            document.getElementById('gameIdDisplay').textContent = currentGameId;
-            document.getElementById('gameStatus').textContent = 'ABIERTO';
-            document.getElementById('gameStatus').className = 'status-badge status-open';
-            document.getElementById('closeGameBtn').disabled = false;
+document.getElementById('gameIdDisplay').textContent = currentGameId;
+          
 
 
 
@@ -1066,19 +1154,21 @@ if (gameIdFromURL) {
 
     // Cargar todo lo relacionado al juego
     loadGameData(currentGameId);
+listenGameStatus(currentGameId);
 
     document.getElementById("gameIdDisplay").textContent = "ID del Juego: " + currentGameId;
 }
 
 
 
-
-
             
             await setDoc(doc(db, 'games', currentGameId), {
                 status: 'open',
+  
                 createdAt: Date.now()
+
             });
+
 
 
 // ⏱️ CÓDIGO AÑADIDO: Muestra la hora al crear el juego
@@ -1091,6 +1181,31 @@ if (gameIdFromURL) {
                 </div>
             `;
  
+
+// 🔑 PASO CLAVE: Iniciar el nuevo listener para el juego recién creado
+    setupGameListener(currentGameId); // ⬅️ NUEVA LÍNEA CLAVE
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -1162,11 +1277,21 @@ showToast('✅ Nuevo juego creado exitosamente');
 async function addParticipant() {
   const name = document.getElementById('nameInput').value.trim();
   const number = document.getElementById('numberInput').value.trim();
+// 🔥 CAMBIO: Obtener el valor de la Cédula
+    const cedula = document.getElementById("participantCedulaInput").value.trim();
 
   if (!name) {
     showToast("Por favor ingresa un nombre");
     return;
   }
+
+
+
+
+
+
+
+
 
   if (!currentGameId) {
     showToast("Primero crea un nuevo juego");
@@ -1181,26 +1306,104 @@ async function addParticipant() {
     return;
   }
 
+
+
+// 🔥 CAMBIO: VALIDACIÓN DE CAMPOS REQUERIDOS (ADMIN)
+    const requiredFields = window.currentRequiredFields || { number: false, cedula: false};
+
+  if (requiredFields.number && number === "") {
+        showToast("El campo Número es obligatorio.", "error");
+        document.getElementById("participantNumberInput").focus();
+        return;
+    }
+    
+    if (requiredFields.cedula && cedula === "") {
+        showToast("El campo Cédula/ID es obligatorio.", "error");
+        document.getElementById("participantCedulaInput").focus();
+        return;
+    }
+    // Fin de la validación
+
+
+
   // 🔍 Verificar duplicado antes de agregar
   const participantsRef = collection(db, 'games', currentGameId, 'participants');
   const querySnapshot = await getDocs(participantsRef);
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// 🔥 NUEVA LÓGICA: Verificar duplicado de Cédula (Admin)
+// Solo verifica si la cédula NO está vacía y si ya existe.
+const cedulaExists = cedula !== "" && querySnapshot.docs.some(doc => {
+    const data = doc.data();
+    return data.cedula.trim() === cedula;
+});
+
+if (cedulaExists) {
+    showToast('❌ Esta Cédula/ID ya está registrada.', 'error');
+    document.getElementById("participantCedulaInput").focus();
+    return;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  // 💡 CAMBIO CRÍTICO: Solo se verifica que el nombre ya exista
   const exists = querySnapshot.docs.some(doc => {
     const data = doc.data();
     return (
-      data.name.toLowerCase() === name.toLowerCase() &&
-      data.number.trim() === number.trim()
+      // Solamente comparamos el nombre, ignorando el campo 'number'
+      data.name.toLowerCase() === name.toLowerCase()
     );
   });
 
+
+
+
+
   if (exists) {
-    showToast('⚠️ Este participante ya existe', 'error');
+    showToast('⚠️ Este nombre ya está registrado como participante.', 'error'); // Nuevo mensaje
     return;
   }
+
+// ... el resto de la función continua ...
+
+
+
 
  const newDoc = await addDoc(participantsRef, {
     name: name,
     number: number,
+
     addedAt: Date.now(),
+// 🔥 CAMBIO: Guardar la Cédula/ID en Firebase
+        cedula: cedula,
+
 });
 
 // 🔴 Guardar el ID del último agregado
@@ -1208,6 +1411,8 @@ localStorage.setItem('lastAddedParticipant', newDoc.id);
 
   document.getElementById('nameInput').value = '';
   document.getElementById('numberInput').value = '';
+// 🔥 CAMBIO: Limpiar el input de Cédula
+    document.getElementById("participantCedulaInput").value = "";
 }
 
        
@@ -1240,8 +1445,9 @@ list.innerHTML = participants.map((p) => {
     return `
         <div class="participant-item">
             <span class="participant-name" style="color:${isLast ? 'red' : 'black'};">
-                ${p.name} ${p.number ? `(${p.number})` : ''}
+                ${p.name} ${p.number ? `(${p.number})` : '- Sin Número'} ${p.cedula ? `(${p.cedula})` : '- Sin cédula'}
             </span>
+             
             <button class="btn btn-danger btn-small" onclick="window.removeParticipant('${p.id}')">Eliminar</button>
         </div>
     `;
@@ -1397,6 +1603,9 @@ const segmentAngle = 360 / participants.length;
             animate();
         }
 
+
+
+
         async function announceWinner(rotation) {
             const normalizedRotation = rotation % 360;
             const anglePerSegment = 360 / participants.length;
@@ -1444,7 +1653,7 @@ let lastTick = -1;
 
 
 
-  async function closeGame() {
+async function closeGame() {
     const gameRef = doc(db, "games", currentGameId);
     const snapshot = await getDoc(gameRef);
 
@@ -1456,18 +1665,9 @@ let lastTick = -1;
     if (currentStatus === "open") {
         if (!confirm("¿Cerrar este juego? No se podrán agregar más participantes.")) return;
 
+        // 💡 ÚNICA ACCIÓN: Solo actualizamos Firebase.
+        // El listener (líneas 447-478) hará el resto en tiempo real.
         await setDoc(gameRef, { status: "closed", closedAt: Date.now() }, { merge: true });
-
-        gameStatus = "closed";
-
-        // actualizar badge admin
-        document.getElementById("gameStatus").textContent = "CERRADO";
-        document.getElementById("gameStatus").className = "status-badge status-closed";
-
-        // cambiar texto del botón
-        const btn = document.getElementById("closeGameBtn");
-        btn.textContent = "🔁 Restaurar Juego Actual";
-        btn.disabled = false; // permitir restaurar
 
         alert("Juego cerrado.");
     }
@@ -1476,18 +1676,9 @@ let lastTick = -1;
     else {
         if (!confirm("¿Restaurar este juego y permitir nuevos participantes?")) return;
 
+        // 💡 ÚNICA ACCIÓN: Solo actualizamos Firebase.
+        // El listener (líneas 447-478) hará el resto en tiempo real.
         await setDoc(gameRef, { status: "open" }, { merge: true });
-
-        gameStatus = "open";
-
-        // actualizar badge admin
-        document.getElementById("gameStatus").textContent = "ABIERTO";
-        document.getElementById("gameStatus").className = "status-badge status-open";
-
-        // cambiar texto del botón
-        const btn = document.getElementById("closeGameBtn");
-        btn.textContent = "🔒 Cerrar Juego";
-        btn.disabled = false;
 
         alert("Juego restaurado y ahora está ABIERTO.");
     }
@@ -1525,6 +1716,7 @@ let lastTick = -1;
 
         const urlParams = new URLSearchParams(window.location.search);
         const joinGameId = urlParams.get('join');
+window.isAdminView = !joinGameId;
 
         if (joinGameId) {
             document.body.innerHTML = `
@@ -1559,8 +1751,9 @@ let lastTick = -1;
 
                         <div class="input-group" style="flex-direction: column;">
                             <input type="text" id="joinName" placeholder="Tu nombre" style="margin-bottom: 10px;" />
-                            <input type="text" id="joinNumber" placeholder="Tu número (opcional)" style="margin-bottom: 10px;" />
-                            <button class="btn btn-success" id="joinBtn" style="width: 100%;">✅ Unirme al Juego</button>
+                            <input type="tel" id="joinNumber" placeholder="Tu número (opcional)" style="margin-bottom: 10px;" />
+                            <input type="number" id="joinCedula" placeholder="Cédula/ID " style="margin-bottom: 10px;" />
+                          <button class="btn btn-success" id="joinBtn" style="width: 100%;">✅ Unirme al Juego</button>
                         </div>
                         <div id="joinMessage" style="margin-top: 20px; text-align: center; font-weight: bold;"></div>
                     </div>
@@ -1606,14 +1799,12 @@ let lastTick = -1;
 
             `;
 
-
-
-
-      document.getElementById('joinBtn').addEventListener('click', async () => 
+ document.getElementById('joinBtn').addEventListener('click', async () => 
             {
 
                 const name = document.getElementById('joinName').value.trim();
                 const number = document.getElementById('joinNumber').value.trim();
+                const cedula = document.getElementById('joinCedula').value.trim();
                 const message = document.getElementById('joinMessage');
              message.textContent = '';
 
@@ -1623,6 +1814,11 @@ let lastTick = -1;
                     message.textContent = '❌ Por favor ingresa tu nombre';
                     return;
                            }
+
+               
+
+
+
                 const gameRef = doc(db, 'games', joinGameId);
                 const gameSnapshot = await getDoc(gameRef);
 
@@ -1636,32 +1832,106 @@ let lastTick = -1;
                     message.textContent = '❌ Este juego está cerrado';
                     return;
                                                               }
-                const participantsRef = collection(db, 'games', joinGameId, 'participants');
-                
+ const participantsRef = collection(db, 'games', joinGameId, 'participants');
+                const querySnapshot = await getDocs(participantsRef);
 
 
 
-// Verificar si ya existe el participante con mismo nombre y número 
-const existingSnapshot = await getDocs(participantsRef);
-const alreadyExists = existingSnapshot.docs.some(doc => {
-  const data = doc.data();
-  return (
-    data.name.toLowerCase() === name.toLowerCase() &&
-    data.number.trim() === number.trim()
-  );
+// 🔥 CAMBIO: VALIDACIÓN DE CAMPOS REQUERIDOS (JOIN)
+    const requiredFields = window.currentRequiredFields || { number: false, cedula: false };
+
+   
+
+
+ if (requiredFields.number && number === "") {
+        message.style.color = 'red';
+        message.textContent = '❌ El campo Número es obligatorio.';
+        return;
+    }
+
+
+
+    
+    if (requiredFields.cedula && cedula === "") {
+        message.style.color = 'red';
+        message.textContent = '❌ El campo Cédula/ID es obligatorio.';
+        return;
+    }
+    // Fin de la validación
+
+
+
+
+
+
+
+
+                // 1. ✅ VERIFICACIÓN DE NÚMERO ÚNICO (TU REQUERIMIENTO)
+               const numberExists = number !== "" && querySnapshot.docs.some(doc => {
+                 const data = doc.data();
+                  return data.number.trim() === number;
+                   });
+
+
+                if (numberExists) {
+                    message.style.color = 'red';
+                    message.textContent = '❌ Este número ya ha sido registrado por otro participante. Usa uno diferente.';
+                    return;
+                }
+
+
+
+
+
+
+
+
+
+
+
+
+
+// 🔥 NUEVA LÓGICA: 2. VERIFICACIÓN DE CÉDULA ÚNICA
+// Solo verifica si la cédula NO está vacía y si ya existe.
+const cedulaExists = cedula !== "" && querySnapshot.docs.some(doc => {
+    const data = doc.data();
+    // Solo compara la cédula
+    return data.cedula.trim() === cedula;
 });
 
-if (alreadyExists) {
-  message.style.color = 'red';
-  message.textContent = '⚠️ Este nombre y número ya están registrados.';
-  return;
+if (cedulaExists) {
+    message.style.color = 'red';
+    message.textContent = '❌ Esta Cédula/ID ya está registrada. Por favor, verifica tus datos.';
+    return;
 }
+
+
+
+
+
+
+
+                
+                // 2. VERIFICACIÓN DE NOMBRE ÚNICO (Manteniendo la lógica anterior)
+                const nameExists = querySnapshot.docs.some(doc => {
+                    const data = doc.data();
+                    // Solo compara el nombre (insensible a mayúsculas)
+                    return data.name.toLowerCase() === name.toLowerCase();
+                });
+
+                if (nameExists) {
+                    message.style.color = 'red';
+                    message.textContent = '❌ Ya te has unido a este juego con ese nombre. No puedes registrarte de nuevo.';
+                    return;
+                }
 
 
 
                 await addDoc(participantsRef, {
                     name: name,
                     number: number,
+                 // 🔥 NUEVO: Guardar Cédula
+                      cedula: cedula,
                     addedAt: Date.now()
                                               });
 
@@ -1669,6 +1939,8 @@ if (alreadyExists) {
                 message.textContent = '✅ ¡Te has unido exitosamente!';
                 document.getElementById('joinName').value = '';
                 document.getElementById('joinNumber').value = '';
+// 🔥 NUEVO: Limpiar input Cédula
+    document.getElementById('joinCedula').value = '';
             });
 
 
@@ -1689,6 +1961,9 @@ function listenGameStatus(gameId) {
     onSnapshot(gameRef, (snap) => {
         if (!snap.exists()) return;
 
+
+
+
 // ⏱️ CÓDIGO AÑADIDO: Muestra la hora del juego
         const gameData = snap.data(); 
         const startTime = gameData.createdAt; 
@@ -1705,14 +1980,26 @@ function listenGameStatus(gameId) {
             `;
         }
 
+
+
         const status = snap.data().status || "open";
-
-
-
         const el = document.getElementById("joinGameStatus");
+
+// 🔥 CAMBIO: Obtener la configuración de campos requeridos
+    const requiredFields = gameData.required || { number: false, cedula: false };
+    
+    // Solo mostrar los toggles en la vista de Admin
+    if (isAdminView) {
+        renderRequiredFieldToggles(requiredFields);
+    }
+
+ // Aplicar los requisitos a ambos formularios (Admin y Join)
+    updateFormRequiredStatus(requiredFields);
+
 
         const nameInput = document.getElementById("joinName");
         const numberInput = document.getElementById("joinNumber");
+     const participantCedulaInput = document.getElementById("joinCedula");
         const joinBtn = document.getElementById("joinBtn");
         const joinMsg = document.getElementById("joinMessage");
 
@@ -1726,6 +2013,20 @@ function listenGameStatus(gameId) {
                 el.style.backgroundColor = "#dc3545";
             }
         }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
         // 🔥 BLOQUEAR FORMULARIO AUTOMÁTICAMENTE
         if (status === "closed") {
@@ -1815,6 +2116,8 @@ onSnapshot(joinParticipantsRef, (snapshot) => {
             id: docSnap.id,
             name: data.name || '',
             number: data.number || '',
+        // 🔥 NUEVO: Leer Cédula
+            cedula: data.cedula || '',
             addedAt: data.addedAt || 0
         });
     });
@@ -1831,17 +2134,22 @@ onSnapshot(joinParticipantsRef, (snapshot) => {
 
     let lastAddedId = items[0].id; // ← EL MÁS RECIENTE
 
-    listDiv.innerHTML = items.map(p => {
+listDiv.innerHTML = items.map(p => {
         const isLast = p.id === lastAddedId;
         const color = isLast ? "red" : "black";
 
         const num = p.number
-            ? ` <span style="color:#666; font-size:0.9rem;">(${p.number})</span>`
-            : '';
+            ? ` <span style="color:#ffffff; font-size:0.9rem;">(${p.number})</span>`
+            : ' - - ';
+        
+        // 🔥 NUEVO: Formato Cédula
+        const ced = p.cedula 
+            ? ` <span style="color:#ffffff; font-size:0.85rem; margin-left:5px;">[ID: ${p.cedula}]</span>` 
+            : ' - - ';
 
         return `
             <div style="padding:6px 4px; border-bottom:1px solid #f0f0f0; color:${color}">
-                • ${escapeHtml(p.name)}${num}
+                • ${escapeHtml(p.name)}${num}${ced}
             </div>
         `;
     }).join('');
@@ -1881,8 +2189,8 @@ onSnapshot(joinWinnersRef, (snapshot) => {
     listDiv.innerHTML = items.map((w, index) => {
         const rank = getRankLabel(index); // Calculamos posición
         
-        const time = w.wonAt ? ` <span style="font-size:0.8rem; color:#666; float:right;">${new Date(w.wonAt).toLocaleTimeString()}</span>` : '';
-        const num = w.number ? ` <span style="color:#666; font-size:0.9rem;">(${w.number})</span>` : '';
+        const time = w.wonAt ? ` <span style="font-size:0.8rem; color:#ffffff; float:right;">${new Date(w.wonAt).toLocaleTimeString()}</span>` : '';
+        const num = w.number ? ` <span style="color:#ffffff; font-size:0.9rem;">(${w.number})</span>` : '';
         
         return `
             <div style="padding:8px 4px; border-bottom:1px solid #f9f9f9;">
@@ -1933,6 +2241,151 @@ function escapeHtml(str) {
             }, 3000);
         }
 
+
+
+
+
+// ==========================================
+// 📥 EXPORTAR A EXCEL (XLS Compatible)
+// ==========================================
+window.exportToExcel = function() {
+    if (!participants || participants.length === 0) {
+        alert("No hay participantes para exportar.");
+        return;
+    }
+
+    // 1. Definir los datos y encabezados
+    const headers = ["Nombre", "Numero", "Cedula", "Fecha Registro"];
+    
+    // 2. Generar las filas de la tabla HTML
+    const rows = participants.map(p => {
+        // Formatear datos para la tabla
+        const date = p.addedAt ? new Date(p.addedAt).toLocaleString() : "N/A";
+        const safeNum = p.number || "-";
+        const safeCedula = p.cedula || "Sin Datos";
+        
+        return `
+            <tr>
+                <td>${p.name.replace(/,/g, "")}</td>
+                <td>${safeNum}</td>
+                <td>${safeCedula}</td>
+                <td>${date}</td>
+            </tr>
+        `;
+    }).join('');
+
+    // 3. Construir la tabla HTML completa
+    const tableHtml = `
+        <table>
+            <thead>
+                <tr>
+                    <th>${headers.join('</th><th>')}</th>
+                </tr>
+            </thead>
+            <tbody>
+                ${rows}
+            </tbody>
+        </table>
+    `;
+    
+    // 4. Crear el Blob con el tipo MIME de Excel y la codificación correcta
+    const uri = 'data:application/vnd.ms-excel;charset=utf-8,' + encodeURIComponent(tableHtml);
+
+    // 5. Crear enlace de descarga y hacer clic automático
+    const link = document.createElement("a");
+    link.setAttribute("href", uri);
+    
+    // Nombre del archivo con la extensión .xls
+    const today = new Date().toISOString().slice(0,10);
+    link.setAttribute("download", `Participantes_Ruleta_${today}.xls`); // .xls es el mejor tipo para exportación HTML-a-Excel
+    
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+};
+
+
+
+// ========================================================
+// ⚙️ MANEJO DE ESTADO DE CAMPOS OBLIGATORIOS
+// ========================================================
+
+// Guarda el estado de obligatoriedad en Firebase
+window.toggleRequiredField = async function(field) {
+    // Usa currentGameId (la variable global que sí existe en tu código)
+    if (!currentGameId) {
+        showToast("Error: Juego no iniciado.", "error");
+        return;
+                         }
+
+  const checkboxId = `require${field.charAt(0).toUpperCase() + field.slice(1)}Toggle`;
+    const checkbox = document.getElementById(checkboxId);
+    const isRequired = !!(checkbox && checkbox.checked);
+
+    try {
+        await updateDoc(doc(db, "games", currentGameId), {
+            [`required.${field}`]: isRequired
+        });
+
+        // 🔥 Aplicar inmediatamente sin esperar reload ni snapshot
+        window.currentRequiredFields[field] = isRequired;
+        updateFormRequiredStatus(window.currentRequiredFields);
+
+
+        showToast(`Campo "${field.charAt(0).toUpperCase() + field.slice(1)}" actualizado a: ${isRequired ? 'OBLIGATORIO' : 'OPCIONAL'}`, "success");
+       } catch (error) {
+        console.error("Error actualizando campo requerido:", error);
+        showToast("Error al guardar la configuración.", "error");
+        if (checkbox) checkbox.checked = !isRequired; // revertir visual
+     }
+}
+
+
+
+
+// Actualiza los formularios (Admin y Join) para reflejar los requisitos
+window.updateFormRequiredStatus = function(requiredFields) {
+    // Guarda el estado globalmente para que las funciones de submit lo puedan usar
+    window.currentRequiredFields = requiredFields; 
+    
+   // 1. ADMIN FORM (IDs que realmente están en el HTML)
+const adminNumInput = document.getElementById('numberInput'); // corregido
+const adminCedulaInput = document.getElementById('participantCedulaInput');
+
+
+if (adminNumInput) {
+    adminNumInput.required = requiredFields.number;
+    adminNumInput.placeholder = requiredFields.number ? "Número (Obligatorio)" : "Número (Opcional)";
+                }
+if (adminCedulaInput) {
+    adminCedulaInput.required = requiredFields.cedula;
+    adminCedulaInput.placeholder = requiredFields.cedula ? "Cédula/ID (Obligatorio)" : "Cédula/ID (Opcional)";
+                    }
+
+
+    // 2. JOIN FORM
+    const joinNumInput = document.getElementById('joinNumber');
+    const joinCedulaInput = document.getElementById('joinCedula');
+
+
+if (joinNumInput) {
+        // En el modo JOIN, no usamos el 'required' de HTML, la validación se hace en el JS de 'joinBtn'
+        joinNumInput.placeholder = requiredFields.number ? "Tu número (Obligatorio)" : "Tu número (opcional)";
+  }
+
+    if (joinCedulaInput) {
+        joinCedulaInput.placeholder = requiredFields.cedula ? "Cédula/ID (Obligatorio)" : "Cédula/ID (opcional)";
+    }
+}
+
+// Muestra el estado de los toggles en la vista Admin (al cargar)
+function renderRequiredFieldToggles(requiredFields) {
+    const numToggle = document.getElementById('requireNumberToggle');
+    const cedulaToggle = document.getElementById('requireCedulaToggle');
+
+    if (numToggle) numToggle.checked = requiredFields.number;
+    if (cedulaToggle) cedulaToggle.checked = requiredFields.cedula;
+}
 
     </script>
 
