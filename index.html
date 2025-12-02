@@ -29,9 +29,9 @@ header {
     margin-bottom: 30px;
     padding: 20px;
     background: rgb(185 245 255 / 44%);
-    border-radius: 15px;
+    border-radius: 0px 0px 10px 10px;
     backdrop-filter: blur(10px);
-    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+  
 }
 
 
@@ -51,14 +51,22 @@ header {
             margin: 0 auto;
         }
 
-        h1 {
-            text-align: center;
-            color: white;
-            font-size: 2.5rem;
-            margin-bottom: 10px;
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
-        }
-
+       h1 {
+    /* Propiedades que ya tenías */
+    background: #ff56aa;
+    text-align: center;
+    color: white;
+    font-size: 2.5rem;
+    margin-bottom: 10px;
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+border-radius: 10px 10px 0px 0px;
+    
+    /* PROPIEDADES NUEVAS PARA EL EFECTO STICKY */
+    position: sticky; /* Habilita el modo pegajoso */
+    top: 0;          /* Define el punto donde se "pega" (0px del borde superior) */
+    z-index: 10;     /* Asegura que el título siempre esté por encima del resto del contenido */
+    padding: 10px 0; /* Opcional: añade padding superior e inferior para que no se vea pegado */
+}
         .game-controls {
             background: white;
             padding: 15px;
@@ -253,8 +261,8 @@ header {
 
         #qrcode {
             display: inline-block;
-            margin: 20px 0;
-            padding: 20px;
+            margin: 5px 0;
+            padding: 5px;
             background: white;
             border-radius: 10px;
         }
@@ -410,8 +418,8 @@ header {
 
         h2 {
             color: #333;
-            margin-bottom: 15px;
-            font-size: 1.5rem;
+            margin-bottom: 5px;
+            font-size: 1rem;
         }
 
         .empty-state {
@@ -527,7 +535,7 @@ flex: 1;
      h1 {
         text-align: center;
         border-radius: 7px 7px 7px 7px;
-        background: #ff69b442;
+        background: #ff56aaa8;
         color: white;
         font-size: 1.4rem;
         margin-bottom: 3px;
@@ -636,9 +644,9 @@ flex: 1;
     <div class="container">
 
 
-
+ <h1>🎡 Juega la Ruleta Dinámica D&R</h1>
   <header>
-            <h1>🎡 Juega la Ruleta Dinámica D&R</h1>
+            
         <div id="adminGameStartTime" style="text-align:center; margin-bottom: 5px;">
         </div>
             <p class="subtitle">Gira la ruleta y descubre al ganador - Comparte el código QR para participación remota</p>
@@ -681,15 +689,15 @@ flex: 1;
                     <button class="btn btn-danger" id="closeGameBtn" disabled>🔒 Cerrar Juego</button>
                 </div>
 
-<div id="requiredFieldsControls" style="text-align:center; margin: 1px 0; padding:5px; border-radius:10px; background: rgb(255 102 102 / 83%); color:white; border: 1px solid rgba(255,255,255,0.2);">
+<div id="requiredFieldsControls" style="text-align:center; margin: 1px 0; padding:3px 11px 5px 10px; border-radius:10px; background: rgb(255 102 102 / 83%); color:white; border: 1px solid rgba(255,255,255,0.2);">
     <strong style="display:block; margin-bottom: 5px; font-size: 0.9rem;">Requisitos de Registro:</strong>
-    <div style="display:inline-flex; gap: 29px;">
+    <div style="display:inline-flex; gap: 20px;">
         <label style="cursor:pointer; font-weight: 500;">
-            <input type="checkbox" id="requireNumberToggle" onchange="toggleRequiredField('number')" style="margin-right: 5px; transform: scale(1.3);">
+            <input type="checkbox" id="requireNumberToggle" onchange="toggleRequiredField('number')" style="margin-right: 3px; transform: scale(1);">
             No. Obligatorio
         </label>
         <label style="cursor:pointer; font-weight: 500;">
-            <input type="checkbox" id="requireCedulaToggle" onchange="toggleRequiredField('cedula')" style="margin-right: 5px; transform: scale(1.3);">
+            <input type="checkbox" id="requireCedulaToggle" onchange="toggleRequiredField('cedula')" style="margin-right: 3px; transform: scale(1);">
             Céd. Obligatoria
         </label>
     </div>
@@ -729,7 +737,7 @@ flex: 1;
         value="5" 
         style="width: 50px; padding: 2px; margin-left: 10px;"
     >
-</div>
+       </div>
 
                 <h2>Ruleta</h2>
                 <div class="wheel-container">
@@ -739,23 +747,25 @@ flex: 1;
                 <button class="btn btn-warning" id="spinBtn" disabled style="font-size: 1.2rem; padding: 15px 30px;">
                     🎯 GIRAR RULETA
                 </button>
-            </div>
-
-
-
-
-             <div class="participants-section">
-    <div class="participants-section1" style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
+   
         
-       <h2 style="margin:0;">Participantes (<span id="participantCount">0</span>)</h2>
-        <button onclick="exportToExcel()" class="btn-successexcel" style="padding: 5px 15px; font-size: 0.9rem; border-radius: 15px;">
-            📥 Excel
-        </button>
-    </div>
-    <div class="participants-list" id="participantsList"></div>
-</div>
 
-        </div>
+ </div>
+
+
+
+
+      <div class="participants-section">
+            <div class="participants-section1" style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
+        
+                  <h2 style="margin:0;">Participantes (<span id="participantCount">0</span>)</h2>
+                <button onclick="exportToExcel()" class="btn-successexcel" style="padding: 5px 15px; font-size: 0.9rem; border-radius: 15px;">
+                        📥 Excel
+                </button>
+             </div>
+           <div class="participants-list" id="participantsList"></div>
+
+               
 
 
 
@@ -763,7 +773,12 @@ flex: 1;
             <h2>📱 Código QR para Participación Remota</h2>
             <div id="qrcode"></div>
             <div class="qr-link" id="qrLink">Genera un nuevo juego para obtener el enlace</div>
-        </div>
+        
+</div>
+
+    </div>
+
+   </div>
 
 
         <div class="winners-section">
@@ -796,9 +811,9 @@ flex: 1;
 
 
         import { initializeApp } from "https://www.gstatic.com/firebasejs/12.5.0/firebase-app.js";
-        import { getFirestore, collection, doc, setDoc, onSnapshot, deleteDoc, addDoc, getDoc, query, getDocs, updateDoc } from "https://www.gstatic.com/firebasejs/12.5.0/firebase-firestore.js";
-
-        const firebaseConfig = {
+        import { getFirestore, collection, doc, setDoc, onSnapshot, deleteDoc, addDoc, getDoc, query, getDocs, updateDoc, collectionGroup, where } from "https://www.gstatic.com/firebasejs/12.5.0/firebase-firestore.js";
+        
+    const firebaseConfig = {
             apiKey: "AIzaSyAxiTkjfh_80fTdXwzLGOl2YMlHsCOsyRM",
             authDomain: "ruleta-2dc56.firebaseapp.com",
             projectId: "ruleta-2dc56",
@@ -1535,6 +1550,7 @@ if (cedulaExists) {
     addedAt: Date.now(),
 // 🔥 CAMBIO: Guardar la Cédula/ID en Firebase
         cedula: cedula,
+
 
 });
 
@@ -2519,7 +2535,283 @@ function renderRequiredFieldToggles(requiredFields) {
     if (cedulaToggle) cedulaToggle.checked = requiredFields.cedula;
 }
 
+
+// La clave secreta para acceder a los detalles del juego
+// -------------------------------------------------------
+// 🔑 LÓGICA DE CLAVE CON MÁSCARA (Reemplazo de la función anterior)
+// -------------------------------------------------------
+
+const MASTER_KEY = "1996"; // La clave secreta sigue aquí
+
+// Función para eliminar el diálogo personalizado
+function removePasswordDialog() {
+    const dialog = document.getElementById('custom-password-dialog-overlay');
+    if (dialog) {
+        dialog.remove();
+    }
+}
+
+// Función que abre un diálogo de contraseña personalizado con input tipo password
+function showPasswordDialog(gameId) {
+    // Si ya existe un diálogo, lo removemos antes de crear uno nuevo
+    removePasswordDialog(); 
+
+    // 1. Crear el overlay (fondo oscuro que bloquea la interacción)
+    const overlay = document.createElement('div');
+    overlay.id = 'custom-password-dialog-overlay';
+    overlay.style.cssText = `
+        position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+        background: rgba(0, 0, 0, 0.7); display: flex; justify-content: center;
+        align-items: center; z-index: 10000;
+    `;
+
+    // 2. Crear el contenido del cuadro de diálogo
+    const dialogBox = document.createElement('div');
+    dialogBox.style.cssText = `
+        background: white; padding: 20px; border-radius: 8px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25); max-width: 300px;
+        text-align: center;
+    `;
+    
+    dialogBox.innerHTML = `
+        <h3 style="margin-top:0;">⚠️ Acceso Restringido</h3>
+        <p>Introduce la clave para ver el juego:</p>
+        <input type="password" id="password-input" 
+               placeholder="Clave de Admin" 
+               style="padding: 10px; margin: 15px 0; width: 90%; border: 1px solid #ccc; border-radius: 4px;">
+        <div style="display:flex; justify-content: space-around; gap: 10px;">
+            <button id="cancel-btn" style="padding: 8px 15px; background: #ccc; border: none; border-radius: 4px; cursor: pointer;">
+                Cancelar
+            </button>
+            <button id="submit-btn" style="padding: 8px 15px; background: #007bff; color: white; border: none; border-radius: 4px; cursor: pointer;">
+                Aceptar
+            </button>
+        </div>
+    `;
+
+    overlay.appendChild(dialogBox);
+    document.body.appendChild(overlay);
+
+    // Enfocar el input de contraseña automáticamente
+    const passwordInput = document.getElementById('password-input');
+    passwordInput.focus();
+
+    // 3. Lógica de manejo de eventos
+    const submitBtn = document.getElementById('submit-btn');
+    const cancelBtn = document.getElementById('cancel-btn');
+
+    const handleSubmission = () => {
+        const claveIngresada = passwordInput.value;
+        removePasswordDialog(); // Cerramos el diálogo inmediatamente
+
+        if (claveIngresada === MASTER_KEY) {
+            window.openGameInNewTab(gameId); // Clave correcta
+        } else {
+            alert("❌ Clave incorrecta. Inténtalo de nuevo."); // Clave incorrecta
+        }
+    };
+
+    // Al hacer clic en Aceptar
+    submitBtn.addEventListener('click', handleSubmission);
+
+    // Al presionar Enter en el campo de texto
+    passwordInput.addEventListener('keypress', (e) => {
+        if (e.key === 'Enter') {
+            handleSubmission();
+        }
+    });
+
+    // Al hacer clic en Cancelar
+    cancelBtn.addEventListener('click', removePasswordDialog);
+}
+
+// Reemplazamos la función original para llamar al nuevo diálogo
+window.openGameWithPassword = showPasswordDialog;
+
+
+// -------------------------------------------------------
+// 🕵️‍♀️ FORMULARIO PARA BUSCAR PARTICIPANTES O GANADORES (Orden de Ganadores por Fecha de Registro)
+// -------------------------------------------------------
+
+document.getElementById('btnBuscarHistorial').addEventListener('click', async () => {
+    const nombreBuscado = document.getElementById('historialNameInput').value.trim();
+    const divResultados = document.getElementById('historialResultados');
+
+    if (!nombreBuscado) {
+        alert("Por favor escribe un nombre.");
+        return;
+    }
+
+    divResultados.innerHTML = '<div style="text-align:center;">⏳ Buscando en historiales y ganadores...</div>';
+
+    try {
+        // 1. Preparamos DOS consultas en paralelo
+        const qParticipants = query(
+            collectionGroup(db, 'participants'), 
+            where('name', '==', nombreBuscado)
+        );
+        const qWinners = query(
+            collectionGroup(db, 'winners'), 
+            where('name', '==', nombreBuscado)
+        );
+        
+        // 2. Ejecutamos ambas consultas al mismo tiempo
+        const [snapPart, snapWin] = await Promise.all([
+            getDocs(qParticipants),
+            getDocs(qWinners)
+        ]);
+
+        const totalEncontrados = snapPart.size + snapWin.size;
+
+        if (totalEncontrados === 0) {
+            divResultados.innerHTML = `<div style="color:red; text-align:center;">No se encontraron registros de "${nombreBuscado}".</div>`;
+            return;
+        }
+
+        divResultados.innerHTML = `<div style="margin-bottom:10px;">Se encontraron <strong>${totalEncontrados}</strong> registros:</div>`;
+
+        // 3. Función auxiliar para procesar los documentos
+        const procesarDocumento = async (docRef, esRegistroGanador, datosDoc) => {
+            const gameDocRef = docRef.parent.parent; 
+            if (!gameDocRef) return null;
+
+            const gameSnap = await getDoc(gameDocRef);
+            const gameData = gameSnap.exists() ? gameSnap.data() : {};
+            const fechaJuego = gameData.createdAt ? new Date(gameData.createdAt).toLocaleString() : "Fecha desconocida";
+            
+            let ganoEsteJuego = esRegistroGanador; 
+
+            // **MODIFICACIÓN CLAVE: OBTENER TODOS LOS GANADORES DEL JUEGO CON SU FECHA wonAt**
+            const winnersRef = collection(db, 'games', gameDocRef.id, 'winners');
+            const winnersSnap = await getDocs(winnersRef);
+            
+            let allWinners = [];
+            winnersSnap.forEach(w => {
+                const wData = w.data();
+                allWinners.push({
+                    name: wData.name,
+                    wonAt: wData.wonAt // Usamos el campo wonAt
+                });
+                if (wData.name === nombreBuscado) ganoEsteJuego = true;
+            });
+            
+            // Ordenar los ganadores por wonAt (del más antiguo al más nuevo: ascendente)
+            allWinners.sort((a, b) => (a.wonAt || 0) - (b.wonAt || 0));
+            
+            // Preparamos la data de los ganadores para mostrar
+            const sortedWinnerDisplayData = allWinners.map(winner => ({
+                name: winner.name,
+                // Formateamos el wonAt a un string de hora legible
+                date: winner.wonAt ? new Date(winner.wonAt).toLocaleTimeString() : 'Hora Desconocida',
+                isBuscado: winner.name === nombreBuscado
+            }));
+            // -----------------------------------------------------------
+
+            return {
+                idJuego: gameDocRef.id,
+                fecha: fechaJuego,
+                gano: ganoEsteJuego,
+                origen: esRegistroGanador ? "Tabla de Ganadores" : "Tabla de Participantes",
+                listaGanadores: sortedWinnerDisplayData, // Array de objetos {name, date, isBuscado}
+                datos: datosDoc
+            };
+        };
+
+        // 4. Procesamos ambas listas y unificamos resultados
+        const promesasParticipantes = snapPart.docs.map(d => procesarDocumento(d.ref, false, d.data()));
+        const promesasGanadores = snapWin.docs.map(d => procesarDocumento(d.ref, true, d.data()));
+
+        const todosLosResultados = await Promise.all([...promesasParticipantes, ...promesasGanadores]);
+
+        // 5. Renderizar
+        const idsProcesados = new Set();
+        todosLosResultados.forEach(res => {
+            if (!res || idsProcesados.has(res.idJuego)) return;
+            idsProcesados.add(res.idJuego);
+
+            const estiloBorde = res.gano 
+                ? "border-left: 5px solid #28a745; background: #e6ffec;" 
+                : "border-left: 5px solid #ccc; background: white;";
+            
+            const icono = res.gano ? "🏆 ¡FUE GANADOR EN ESTE JUEGO!" : "😐 Participó pero no ganó";
+            
+            const cedulaInfo = res.datos.cedula ? `Cédula: ${res.datos.cedula}` : '';
+            const numInfo = res.datos.number ? `Num: ${res.datos.number}` : '';
+
+            // HTML para la lista de ganadores (ordenados por hora wonAt)
+            const listaGanadoresHTML = res.listaGanadores.map(winner => {
+                const style = winner.isBuscado ? 'font-weight:bold; color:#004085; background: #ffffcc; padding: 2px 5px; border-radius: 3px;' : '';
+                return `<li style="margin-left:-10px; ${style}">[${winner.date}] ${winner.name}</li>`;
+            }).join('');
+
+            const htmlCard = `
+                <div style="${estiloBorde} padding: 10px; margin-bottom: 8px; border-radius: 4px; box-shadow: 0 1px 3px rgba(0,0,0,0.1);">
+                    <div style="display:flex; justify-content:space-between;">
+                        <strong>${icono}</strong>
+                        <small style="color:#666;">${res.fecha}</small>
+                    </div>
+                    <div style="font-size: 0.9rem; margin-top: 5px; margin-bottom: 10px;">
+                        <strong>ID Juego:</strong> ${res.idJuego} <br>
+                        <strong>Número tel. y Cédula:</strong> ${cedulaInfo} ${numInfo}
+                    </div>
+                    
+                    <details style="margin-bottom: 10px;">
+                        <summary style="cursor:pointer; color:#004085; font-weight:bold;">🏆 Ver ${res.listaGanadores.length} Ganador(es) de este Juego</summary>
+                        <ol style="padding-left: 20px; margin-top: 5px;">
+                            ${listaGanadoresHTML}
+                        </ol>
+                    </details>
+                    
+                
+<button onclick="window.openGameWithPassword('${res.idJuego}')" 
+        style="padding:3px 8px; font-size:0.8rem; cursor:pointer; background:#007bff; color:white; border:none; border-radius:3px;">
+    🔑 Ver Detalles del Juego
+</button>
+
+                </div>
+            `;
+            divResultados.innerHTML += htmlCard;
+        });
+
+    } catch (error) {
+        console.error("Error buscando:", error);
+        
+        if (error.message.includes("indexes")) {
+            divResultados.innerHTML = `
+                <div style="color:red; background:#fff0f0; padding:10px; border:1px solid red;">
+                    <strong>⚠️ Error de configuración en Firebase:</strong><br>
+                    Necesitas crear el índice para la colección <b>'participants'</b> y <b>'winners'</b>. Abre la consola (F12) y sigue el enlace que te da Google.
+                </div>
+            `;
+        } else {
+            divResultados.innerHTML = `<p style="color:red">Error desconocido: ${error.message}</p>`;
+        }
+    }
+});
+
+
+
     </script>
+
+
+<hr style="margin: 20px 0; border: 0; border-top: 1px solid #ddd;">
+
+<div style="background: #f0f8ff; padding: 15px; border-radius: 8px; border: 1px solid #cce5ff; margin-bottom: 20px;">
+    <h3 style="margin-top:0; color: #004085;">🕵️‍♀️ Historial de Participante</h3>
+    <p style="font-size: 0.9rem; margin-bottom: 10px;">Busca en qué juegos participó una persona por su nombre exacto.</p>
+    
+    <div style="display: flex; gap: 10px;">
+        <input type="text" id="historialNameInput" placeholder="Nombre exacto (Ej: Dawin)" 
+               style="flex: 1; padding: 10px; border: 1px solid #ccc; border-radius: 5px;">
+        <button id="btnBuscarHistorial" style="padding: 10px 20px; background: #004085; color: white; border: none; border-radius: 5px; cursor: pointer;">
+            Buscar
+        </button>
+    </div>
+
+    <div id="historialResultados" style="margin-top: 15px; max-height: 300px; overflow-y: auto;"></div>
+</div>
+
+
 
   <!-- 🔥 Panel oculto del administrador (CTRL + SHIFT + D) -->
 <div id="adminHiddenPanel" 
