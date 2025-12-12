@@ -5,20 +5,22 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Ruleta Dinámica Dawin</title>
    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<script src="ej/app.js"></script>
+
 <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
-    <link rel="manifest" href="manifest.json">
- <link rel="icon" type="image/png" href="icon-192.png">
+<link rel="manifest" href="manifest.json">
+  <link rel="icons" href="/icons/icon-192.png">
 <link rel="service-worker" href="service-worker.js">
 <meta name="theme-color" content="#b60000">
+
 <script>
 if ("serviceWorker" in navigator) {
   navigator.serviceWorker.register("service-worker.js");
 }
 </script>
-    
- <style>
+
+ 
+<style>
         * {
             margin: 0;
             padding: 0;
@@ -420,6 +422,8 @@ border-radius: 10px 10px 0px 0px;
             color: white;
         }
 
+
+
         .status-closed {
             background: #eb3349;
             color: white;
@@ -496,7 +500,96 @@ flex: 1;
             box-shadow:0 0 12px rgba(0,0,0,0.15); width:650px; z-index:99999;"
 
             }
+
+
+
+
+
+
+
+/* Estilos base del botón (oculto en escritorio) */
+.header-toggle {
+    display: none; /* Por defecto no se ve en PC */
+    
+    color: #555;
+    padding: 10px;
+    text-align: center;
+    cursor: pointer;
+    font-size: 0.6rem;
+    font-weight: bold;
+    border-bottom: 1px solid #ddd;
+    transition: background 0.3s;
+    user-select: none;
+}
+
+.header-toggle:hover {
+    background: #e0e0e0;
+}
+
+.header-toggle .arrow-icon {
+    display: inline-block;
+    margin-left: 5px;
+    transition: transform 0.3s ease;
+
+
+}
+
+
+
+
+
+
+/* --- 📱 MEDIA QUERY PARA MÓVILES (430px) --- */
+
+
 @media (max-width: 430px) {
+
+ .status-badge {
+            margin-left: 15px;
+        display: inline-block;
+        padding: 1px 20px 1px 20px;
+        border-radius: 20px;
+        font-size: 0.55rem;
+        font-weight: bold;
+        }
+
+.game-id {
+            font-size: 0.6rem;
+            color: #666;
+        }
+
+/* 1. Mostrar el botón en móvil */
+    .header-toggle {
+        display: block; 
+    }
+
+    /* 2. Ocultar el Header por defecto con animación suave */
+    header {
+        max-height: 0;           /* Altura 0 para esconder */
+        overflow: hidden;        /* Esconder contenido que sobra */
+        padding: 0 20px;         /* Quitar padding vertical */
+        opacity: 0;              /* Hacerlo transparente */
+        margin-bottom: 0;
+        
+        /* Animación suave */
+        transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    /* 3. Clase para cuando esté ABIERTO (activado por JS) */
+    header.active {
+        max-height: 500px;       /* Altura suficiente para mostrar contenido */
+        padding: 20px;           /* Restaurar padding */
+        opacity: 1;              /* Restaurar opacidad */
+        margin-bottom: 20px;     /* Restaurar margen */
+        border-bottom: 1px solid #ddd;
+    }
+
+    /* 4. Rotar la flechita cuando está abierto */
+    .header-toggle.active .arrow-icon {
+        transform: rotate(180deg);
+    }
+
+
 
 .paneloculto {
             display:none; position:fixed; top:20px; left:50%; transform:translateX(-50%);
@@ -613,7 +706,7 @@ flex: 1;
     .nombreparticipante
           {
     flex: 1;
-    padding: 12px;
+    padding: 5px;
     border: 2px solid #ddd;
     border-radius: 8px;
     font-size: 1rem;
@@ -624,7 +717,7 @@ flex: 1;
 
     .numero {
     flex: 1;
-    padding: 12px;
+    padding: 5px;
     border: 2px solid #ddd;
     border-radius: 8px;
     font-size: 1rem;
@@ -635,7 +728,7 @@ flex: 1;
 
     .cedula {
         flex: 1;
-        padding: 12px;
+        padding: 5px;
         border: 2px solid #ddd;
         border-radius: 8px;
         font-size: 1rem;
@@ -655,7 +748,7 @@ flex: 1;
 
 
 .btn {
-        padding: 12px 24px;
+        padding: 6px 24px;
         border: none;
         border-radius: 8px;
         font-size: 0.7rem;
@@ -723,23 +816,36 @@ flex: 1;
 
 
  <h1>🎡 Juega la Ruleta Dinámica D&R</h1>
-  <header>
-            
-        <div id="adminGameStartTime" style="text-align:center; margin-bottom: 5px;">
-        </div>
-            <p class="subtitle">Gira la ruleta y descubre al ganador - Comparte el código QR para participación remota</p>
-        
-          <!-- 🔥 TÍTULO EDITABLE DE LA RIFA (ADMIN) -->
-        <div style="margin-top:10px; text-align:center;">
-          <input id="gameTitleInput" 
-               type="text" 
-               placeholder="Escribe el título de la rifa..."
-               style="padding:8px; width:80%; max-width:350px; text-align:center; border-radius:8px;">
-            <p id="gameTitleDisplay" 
-           style="margin-top:10px; font-size:1.3rem; font-weight:bold; color:#ff4b5c; animation:pulse 1.8s infinite;">
-        </p>
-       </div>
-  </header>
+
+<div id="headerToggleBtn" class="header-toggle">
+    <span>ℹ️ Ver Información del Juego</span>
+    <span class="arrow-icon">▼</span>
+</div>
+
+<header id="mainHeader">
+    <div id="adminGameStartTime" style="text-align:center; margin-bottom: 5px;"></div>
+    <p class="subtitle">Gira la ruleta y descubre al ganador - Comparte el código QR para participación remota</p>
+    
+    <div style="margin-top:10px; text-align:center;">
+        <input id="gameTitleInput" type="text" placeholder="Escribe el título de la rifa..." style="padding:8px; width:80%; max-width:350px; text-align:center; border-radius:8px;">
+        <p id="gameTitleDisplay" style="margin-top:10px; font-size:1.3rem; font-weight:bold; color:#ff4b5c; animation:pulse 1.8s infinite;"></p>
+    </div>
+
+<div id="requiredFieldsControls" style="text-align:center; margin: 1px 0; padding:3px 11px 5px 10px; border-radius:10px;  color:#e10303; border: 1px solid rgba(255,255,255,0.2);">
+        <strong style="display:block; margin-bottom: 5px; font-size: 0.9rem;">Solicitar Número y/o Cédula:</strong>
+     <div style="display:inline-flex; gap: 170px;">
+          <label class="checkboxNum">
+            <input class="checkboxNum2" type="checkbox" id="requireNumberToggle" onchange="toggleRequiredField('number')" >
+            Número
+              </label>
+           <label class="checkboxCed" style="cursor:pointer; font-weight: 500;">
+            <input class="checkboxCed2" type="checkbox" id="requireCedulaToggle" onchange="toggleRequiredField('cedula')" style="margin-right: 3px; transform: scale(1);">
+            Cédula
+        </label>
+    </div>
+   </div>
+
+</header>
 
 <!-- 🔥 Animación Pulse -->
 <style>
@@ -759,6 +865,7 @@ flex: 1;
             <div class="game-info">
                 <div>
                     <span class="game-id">ID: <strong id="gameIdDisplay">-</strong></span>
+<span class="status-badge" >Estado: </span>
                     <span class="status-badge status-open" id="gameStatus">Apartura un nuevo juego y empieza la diversión </span>
                 </div>
                 <div style="display: flex;gap: 10px;/* flex-wrap: wrap; */">
@@ -767,22 +874,9 @@ flex: 1;
                     <button class="btn btn-danger" id="closeGameBtn" disabled>🔒 Cerrar Juego</button>
                 </div>
 
-<div id="requiredFieldsControls" style="text-align:center; margin: 1px 0; padding:3px 11px 5px 10px; border-radius:10px;  color:#e10303; border: 1px solid rgba(255,255,255,0.2);">
-    <strong style="display:block; margin-bottom: 5px; font-size: 0.9rem;">Solicitar Número y/o Cédula:</strong>
-    <div style="display:inline-flex; gap: 35px;">
-        <label class="checkboxNum">
-            <input class="checkboxNum2" type="checkbox" id="requireNumberToggle" onchange="toggleRequiredField('number')" >
-            Número
-        </label>
-        <label class="checkboxCed" style="cursor:pointer; font-weight: 500;">
-            <input class="checkboxCed2" type="checkbox" id="requireCedulaToggle" onchange="toggleRequiredField('cedula')" style="margin-right: 3px; transform: scale(1);">
-            Cédula
-        </label>
-    </div>
+  
+
 </div>
-
-
-            </div>
 
 
 
@@ -918,6 +1012,47 @@ window.openGameInNewTab = function(gameId) {
 
 
 
+// -------------------------------------------------------
+// 📋 FUNCIÓN GLOBAL PARA COPIAR AL PORTAPAPELES (Verificado)
+// -------------------------------------------------------
+window.copiarAlPortapapeles = async function(texto) {
+    let success = false;
+    try {
+        // Intenta usar la API moderna de portapapeles
+        await navigator.clipboard.writeText(texto);
+        success = true;
+    } catch (err) {
+        // Fallback antiguo si la API moderna falla (ej: si el código no se sirve por HTTPS)
+        try {
+            const tempInput = document.createElement('textarea');
+            tempInput.value = texto;
+            tempInput.style.position = 'fixed'; // Evita el desplazamiento
+            tempInput.style.opacity = '0';
+            document.body.appendChild(tempInput);
+            tempInput.focus();
+            tempInput.select();
+            document.execCommand('copy');
+            document.body.removeChild(tempInput);
+            success = true;
+        } catch (errFallback) {
+            console.error('Error en el fallback de copiado:', errFallback);
+            // Si todo falla, pide al usuario que lo haga manualmente
+            prompt("Copia el enlace manualmente:", texto);
+        }
+    }
+
+    if (success) {
+        // 🚨 CRUCIAL: Intenta llamar a showToast. Si falla, al menos sabremos que se copió.
+        try {
+            showToast("✅ ¡Enlace copiado al portapapeles!", "success");
+        } catch (e) {
+            console.warn("La notificación 'showToast' no está definida o falló. Pero el texto se copió.", e);
+            // Puedes usar una alerta simple si showToast no funciona:
+            alert("¡Enlace copiado al portapapeles!"); 
+
+        }
+    }
+};
 
 
 
@@ -1017,60 +1152,62 @@ async function loadAdminGameList() {
 }
 
 // -------------------------------------------------------
-// 🔥 Renderizar listas con filtro (Buscador)
+// 🔥 Renderizar listas con Checkboxes para eliminar
+// -------------------------------------------------------
+// -------------------------------------------------------
+// 🔥 Renderizar listas (Con ID único por fila para animación)
 // -------------------------------------------------------
 function renderGameLists(filterText) {
     let openHTML = "";
     let closedHTML = "";
-    
-    // Convertir búsqueda a minúsculas para comparar
     const term = filterText.toLowerCase().trim();
 
     allFetchedGames.forEach((game) => {
-        // FILTRO: Si el ID no incluye el texto buscado, lo saltamos
         if (!game.id.toLowerCase().includes(term)) return;
 
         const gameId = game.id;
         const status = game.status || "open";
         const created = game.createdAt ? new Date(game.createdAt).toLocaleString() : "N/A";
+        const isCurrent = (gameId === currentGameId);
+        const bgStyle = isCurrent ? "background-color: #e3f2fd;" : "";
 
-        // Plantilla HTML común
+        // 🔥 CAMBIO IMPORTANTE: Agregamos id="game-row-${gameId}" al div padre
         const cardHTML = `
-            <div style="border-bottom:1px solid #eee; padding:10px 0;">
-                <strong>${gameId}</strong><br>
-                <small>${status === 'open' ? 'Creado' : 'Cerrado'}: ${created}</small><br>
+            <div id="game-row-${gameId}" style="border-bottom:1px solid #eee; padding:10px 5px; display:flex; gap:10px; align-items:flex-start; ${bgStyle} transition: all 0.5s;">
                 
-                <button onclick="openGameInNewTab('${gameId}')"
-                        style="margin-top:5px; margin-right:5px; padding:6px 10px; 
-                               border:none; border-radius:5px; background:#007bff; color:white; cursor:pointer;">
-                    Abrir Juego
-                </button>
-
-                ${status === 'open' 
-                    ? `<button onclick="closeLostGame('${gameId}')"
-                            style="margin-top:5px; padding:6px 10px; border:none; 
-                                   border-radius:5px; background:#dc3545; color:white; cursor:pointer;">
-                        Cerrar Juego
-                       </button>`
-                    : `<button onclick="reopenLostGame('${gameId}')"
-                            style="margin-top:5px; padding:6px 10px; border:none; 
-                                   border-radius:5px; background:#28a745; color:white; cursor:pointer;">
-                        Reabrir Juego
-                       </button>`
-                }
+                <input type="checkbox" class="game-delete-checkbox" value="${gameId}" 
+                       onchange="updateSelectedCount()" style="transform: scale(1.3); margin-top: 5px;">
+                
+                <div style="flex: 1;">
+                    <strong>${gameId}</strong> ${isCurrent ? '<span style="font-size:0.7rem; color:blue; font-weight:bold;">(ACTUAL)</span>' : ''}<br>
+                    <small>${status === 'open' ? 'Creado' : 'Cerrado'}: ${created}</small><br>
+                    
+                    <div style="margin-top:5px;">
+                        <button onclick="openGameInNewTab('${gameId}')"
+                                style="padding:4px 8px; border:none; border-radius:4px; background:#007bff; color:white; cursor:pointer; font-size:0.8rem;">
+                            Abrir
+                        </button>
+                        ${status === 'open' 
+                            ? `<button onclick="closeLostGame('${gameId}')" style="padding:4px 8px; border:none; border-radius:4px; background:#dc3545; color:white; cursor:pointer; font-size:0.8rem;">Cerrar</button>`
+                            : `<button onclick="reopenLostGame('${gameId}')" style="padding:4px 8px; border:none; border-radius:4px; background:#28a745; color:white; cursor:pointer; font-size:0.8rem;">Reabrir</button>`
+                        }
+                    </div>
+                </div>
             </div>
         `;
 
-        if (status === "open") {
-            openHTML += cardHTML;
-        } else {
-            closedHTML += cardHTML;
-        }
+        if (status === "open") openHTML += cardHTML;
+        else closedHTML += cardHTML;
     });
 
-    document.getElementById("adminOpenList").innerHTML = openHTML || "<p style='text-align:center; color:#999'>No se encontraron juegos.</p>";
-    document.getElementById("adminClosedList").innerHTML = closedHTML || "<p style='text-align:center; color:#999'>No se encontraron juegos.</p>";
+    document.getElementById("adminOpenList").innerHTML = openHTML || "<p style='color:#999'>Vacio</p>";
+    document.getElementById("adminClosedList").innerHTML = closedHTML || "<p style='color:#999'>Vacio</p>";
+    updateSelectedCount();
 }
+
+
+
+
 
 // -------------------------------------------------------
 // 🔥 Evento del Buscador (INPUT)
@@ -1100,6 +1237,124 @@ window.reopenLostGame = async (id) => {
     alert("Juego reabierto correctamente");
     loadAdminGameList();
 };
+
+
+
+
+// -------------------------------------------------------
+// 🗑️ LÓGICA DE ELIMINACIÓN MASIVA
+// -------------------------------------------------------
+
+// Función global para actualizar el contador de seleccionados
+window.updateSelectedCount = function() {
+    const checkboxes = document.querySelectorAll('.game-delete-checkbox:checked');
+    document.getElementById('selectedCount').textContent = `${checkboxes.length} seleccionados`;
+};
+
+// Función global para "Seleccionar Todo"
+window.toggleSelectAllGames = function(source) {
+    const checkboxes = document.querySelectorAll('.game-delete-checkbox');
+    checkboxes.forEach(cb => cb.checked = source.checked);
+    window.updateSelectedCount();
+};
+
+// Función auxiliar para borrar una subcolección (participantes o winners)
+async function deleteSubcollection(gameId, subcollectionName) {
+    const subRef = collection(db, "games", gameId, subcollectionName);
+    const snapshot = await getDocs(subRef);
+    
+    // Borramos cada documento de la subcolección
+    const deletePromises = snapshot.docs.map(docSnap => deleteDoc(docSnap.ref));
+    await Promise.all(deletePromises);
+}
+
+// 🔥 FUNCIÓN PRINCIPAL DE ELIMINAR
+// -------------------------------------------------------
+// 🗑️ ELIMINACIÓN CON BARRA DE PROGRESO Y EFECTO VISUAL
+// -------------------------------------------------------
+
+window.deleteSelectedGames = async function() {
+    const checkboxes = document.querySelectorAll('.game-delete-checkbox:checked');
+    const idsToDelete = Array.from(checkboxes).map(cb => cb.value);
+    const total = idsToDelete.length;
+
+    if (total === 0) {
+        alert("⚠️ Selecciona al menos un juego.");
+        return;
+    }
+
+    if (!confirm(`⚠️ Vas a eliminar ${total} juego(s) permanentemente. ¿Continuar?`)) return;
+    if (idsToDelete.includes(currentGameId) && !confirm("🚨 ¡CUIDADO! El juego actual está en la lista. ¿Seguro?")) return;
+
+    // --- REFERENCIAS DE UI ---
+    const deleteBtn = document.querySelector('button[onclick="deleteSelectedGames()"]');
+    const progressContainer = document.getElementById('deleteProgressContainer');
+    const progressBar = document.getElementById('deleteProgressBar');
+    const progressText = document.getElementById('progressText');
+    const progressPercent = document.getElementById('progressPercent');
+
+    // --- PREPARAR UI ---
+    deleteBtn.disabled = true;
+    progressContainer.style.display = "block"; // Mostrar barra
+    progressBar.style.width = "0%";
+    
+    try {
+        // 🔥 BUCLE UNO A UNO (Para efecto visual)
+        for (let i = 0; i < total; i++) {
+            const id = idsToDelete[i];
+            
+            // 1. Actualizar texto
+            progressText.textContent = `Eliminando: ${id} (${i + 1}/${total})`;
+            
+            // 2. Operaciones en Firebase (Esperamos a que termine cada una)
+            await deleteSubcollection(id, "participants");
+            await deleteSubcollection(id, "winners");
+            await deleteDoc(doc(db, "games", id));
+
+            // 3. 🎨 EFECTO VISUAL: Eliminar fila del HTML inmediatamente
+            const row = document.getElementById(`game-row-${id}`);
+            if (row) {
+                row.style.opacity = '0'; // Desvanecer
+                row.style.transform = 'translateX(50px)'; // Mover a la derecha
+                setTimeout(() => row.remove(), 300); // Borrar del DOM tras animación
+            }
+            
+            // 4. Actualizar barra de progreso
+            const percent = Math.round(((i + 1) / total) * 100);
+            progressBar.style.width = `${percent}%`;
+            progressPercent.textContent = `${percent}%`;
+        }
+
+        // --- FINALIZACIÓN ---
+        setTimeout(() => {
+            alert("✅ Eliminación completada.");
+            progressContainer.style.display = "none"; // Ocultar barra
+            deleteBtn.disabled = false;
+            
+            // Limpiar checkbox "Seleccionar Todo" y contador
+            document.getElementById('selectAllGames').checked = false;
+            document.getElementById('selectedCount').textContent = "0 seleccionados";
+            
+            // Recargar lista completa de la DB para asegurar sincronización
+            loadAdminGameList();
+
+            // Si se borró el actual
+            if (idsToDelete.includes(currentGameId)) {
+                localStorage.removeItem('currentGameId');
+                location.reload();
+            }
+
+        }, 500); // Pequeña pausa al final para ver el 100%
+
+    } catch (error) {
+        console.error(error);
+        alert("❌ Error durante la eliminación.");
+        deleteBtn.disabled = false;
+        progressContainer.style.display = "none";
+    }
+};
+
+
 
 
 
@@ -1448,13 +1703,40 @@ listenGameTitle(currentGameId, "gameTitleDisplay");
 showToast('✅ Nuevo juego creado exitosamente');
         }
 
-      function generateQR() {
-            const qrDiv = document.getElementById('qrcode');
-            qrDiv.innerHTML = '';
-            const url = `${window.location.origin}${window.location.pathname}?join=${currentGameId}`;
-            new QRCode(qrDiv, { text: url, width: 150, height: 150 });
-            document.getElementById('qrLink').innerHTML = `<a href="${url}" target="_blank">Copiar enlace de invitación</a>`;
-        }
+
+
+    // Reemplaza tu función generateQR actual con esta:
+function generateQR() {
+    const qrDiv = document.getElementById('qrcode');
+    qrDiv.innerHTML = ''; // Limpiar QR anterior
+    
+    // Generamos la URL completa
+    const url = `${window.location.origin}${window.location.pathname}?join=${currentGameId}`;
+    
+    // Generar el gráfico QR
+    new QRCode(qrDiv, { text: url, width: 150, height: 150 });
+    
+    // 👇 AQUÍ ESTÁ LA MEJORA DEL BOTÓN 👇
+    const linkContainer = document.getElementById('qrLink');
+    linkContainer.innerHTML = `
+        <div style="margin-top: 15px; display: flex; flex-direction: column; gap: 8px;">
+            <input type="text" value="${url}" readonly 
+                   style="width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 6px; background: #f9f9f9; color: #555; font-size: 0.85rem; text-align: center;">
+            
+            <button onclick="window.copiarAlPortapapeles('${url}')" 
+                    class="btn btn-primary" 
+                    style="width: 100%; padding: 10px; display: flex; align-items: center; justify-content: center; gap: 8px;">
+                📋 Copiar Link de Acceso
+            </button>
+            
+            <a href="${url}" target="_blank" style="font-size: 0.8rem; color: #667eea; margin-top: 5px;">
+                O abrir en nueva pestaña ↗
+            </a>
+        </div>
+    `;
+}
+
+
 
      function listenToParticipants() {
     const participantsRef = collection(db, 'games', currentGameId, 'participants');
@@ -2295,10 +2577,11 @@ listenGameStatus(joinGameId);
 // -----------------------------------------------------
 // 🔥 Generar QR en el modo JOIN
 // -----------------------------------------------------
+// Reemplaza tu función generateJoinQR actual con esta:
 function generateJoinQR() {
     const url = `${window.location.origin}${window.location.pathname}?join=${joinGameId}`;
 
-    // QR
+    // 1. Generar Gráfico QR
     const div = document.getElementById("joinQR");
     div.innerHTML = "";
     new QRCode(div, {
@@ -2307,10 +2590,27 @@ function generateJoinQR() {
         height: 120
     });
 
-    // Enlace
-    const link = document.getElementById("joinLink");
-    link.href = url;
-    link.textContent = "Abrir o compartir enlace de invitación";
+    // 2. 👇 MEJORA: Botón de copiar en la vista Join 👇
+    // Buscamos el contenedor donde antes ponías el link
+    const linkContainer = document.getElementById("joinLinkContainer");
+    
+    // Reemplazamos el contenido con el botón
+    linkContainer.innerHTML = `
+        <div style="display: flex; flex-direction: column; gap: 10px;">
+            <p style="margin: 0; font-size: 0.9rem; color: #666;">Invita a más amigos:</p>
+            
+            <input type="text" value="${url}" readonly 
+                   style="width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 6px; background: #f9f9f9; color: #555; font-size: 0.85rem; text-align: center;">
+
+            <button onclick="window.copiarAlPortapapeles('${url}')" 
+                    class="btn btn-primary" 
+                    style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); width: 100%; padding: 10px;">
+                📋 Copiar Link de Invitación
+            </button>
+        </div>
+    `;
+    
+    // Nota: Ya no necesitamos actualizar el href de "joinLink" porque reemplazamos todo el contenedor.
 }
 
 // Ejecutarlo
@@ -2712,6 +3012,7 @@ window.openGameWithPassword = showPasswordDialog;
 // -------------------------------------------------------
 
 document.getElementById('btnBuscarHistorial').addEventListener('click', async () => {
+
     const nombreBuscado = document.getElementById('historialNameInput').value.trim();
     const divResultados = document.getElementById('historialResultados');
 
@@ -2869,6 +3170,33 @@ document.getElementById('btnBuscarHistorial').addEventListener('click', async ()
 
 
 
+
+// -------------------------------------------------------
+// ↕️ LÓGICA PARA OCULTAR/MOSTRAR HEADER EN MÓVIL
+// -------------------------------------------------------
+const toggleBtn = document.getElementById('headerToggleBtn');
+const mainHeader = document.getElementById('mainHeader');
+
+if (toggleBtn && mainHeader) {
+    toggleBtn.addEventListener('click', () => {
+        // 1. Alternar clase en el header (abre/cierra)
+        mainHeader.classList.toggle('active');
+        
+        // 2. Alternar clase en el botón (para girar flecha)
+        toggleBtn.classList.toggle('active');
+        
+        // 3. (Opcional) Cambiar texto
+        const spanText = toggleBtn.querySelector('span:first-child');
+        if (mainHeader.classList.contains('active')) {
+            spanText.textContent = "Ocultar Información";
+        } else {
+            spanText.textContent = "ℹ️ Ver Información del Juego";
+        }
+    });
+}
+
+
+
     </script>
 
 
@@ -2908,6 +3236,35 @@ document.getElementById('btnBuscarHistorial').addEventListener('click', async ()
                style="width: 80%; padding: 10px; border: 1px solid #ccc; border-radius: 5px; font-size: 1rem;">
     </div>
 
+
+
+
+<div style="background: #ffe6e6; padding: 10px; border-radius: 8px; margin-bottom: 15px; border: 1px solid #ffcccc; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px;">
+    <div>
+        <label style="cursor:pointer; font-weight:bold; margin-right: 15px;">
+            <input type="checkbox" id="selectAllGames" onchange="toggleSelectAllGames(this)"> Seleccionar Todo
+        </label>
+        <span id="selectedCount" style="font-size: 0.9rem; color: #666;">0 seleccionados</span>
+    </div>
+    <button onclick="deleteSelectedGames()" 
+            style="padding: 8px 15px; background: #dc3545; color: white; border: none; border-radius: 5px; cursor: pointer; font-weight: bold;">
+        🗑️ Eliminar Juegos Marcados
+    </button>
+</div>
+
+   <!-- barra de progreso de eliminacion -->
+
+<div id="deleteProgressContainer" style="display:none; margin-top: 10px; background: #fff; padding: 10px; border-radius: 8px; border: 1px solid #ccc;">
+    <div style="display:flex; justify-content:space-between; margin-bottom:5px; font-size:0.9rem; font-weight:bold;">
+        <span id="progressText">Eliminando...</span>
+        <span id="progressPercent">0%</span>
+    </div>
+    <div style="width: 100%; background-color: #e0e0e0; border-radius: 10px; height: 20px; overflow: hidden;">
+        <div id="deleteProgressBar" style="width: 0%; height: 100%; background: linear-gradient(90deg, #ff4b5c, #d90429); transition: width 0.3s ease;"></div>
+    </div>
+</div>
+
+
     <div style="display:flex; gap:20px;">
         
         <!-- Columna: Juegos Abiertos -->
@@ -2931,6 +3288,4 @@ document.getElementById('btnBuscarHistorial').addEventListener('click', async ()
 
 </body>
 </html>
-
-
 
